@@ -1,0 +1,125 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Detail Restaurant Page</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+</head>
+
+
+
+<body class="container">
+
+	<header class="d-flex align-items-center p-3 bg-light border-bottom">
+
+		<div class="me-auto">
+			<a th:href="@{/restaurant}"
+				class="text-dark text-decoration-none fs-3 font-weight-bold"
+				style="font-family: 'Helvetica Neue', Arial, sans-serif; letter-spacing: 0.5px;">
+				Gourmet Clip </a>
+		</div>
+
+		<div class="d-flex align-items-center">
+			<div class="me-3 text-secondary font-weight-bold">
+				ユーザーID: <span>userId（仮）</span>
+			</div>
+
+			<div class="me-3">
+				<a th:href="@{/restaurant}" class="btn btn-outline-secondary btn-sm"
+					style="font-weight: bold;"> &larr; 飲食店一覧へ </a>
+			</div>
+
+			<div class="me-3">
+				<a th:href="@{/restaurant}"
+					class="btn btn-link btn-sm text-decoration-none"
+					style="font-weight: bold; color: #6c757d;">ユーザー管理(仮)</a>
+			</div>
+
+			<div>
+				<a th:href="@{/restaurant}" class="btn btn-danger btn-sm">ログアウト（仮）</a>
+			</div>
+		</div>
+
+	</header>
+
+
+
+	<!--<h1 class="display-4 mb-4" th:text="${title}">店舗詳細</h1>  -->
+
+
+
+	<div
+		class="d-flex align-items-center justify-content-between mt-4 mb-0 p-3 bg-light rounded border">
+		<div class="d-inline-flex align-items-center flex-wrap">
+			<span th:text="${msg}" class="badge bg-secondary me-2 fs-6">店舗詳細</span>
+			<strong class="fs-4 text-dark"
+				th:text="|${formModel.restaurantName} (ID:${formModel.id})|">飲食店名</strong>
+		</div>
+
+		<div class="d-flex gap-2">
+			<a th:href="@{/restaurant/edit/{id}(id=${formModel.id})}"
+				class="btn btn-primary">編集</a> <a
+				th:href="@{/restaurant/delete/{id}(id=${formModel.id})}"
+				class="btn btn-danger">削除</a>
+		</div>
+	</div>
+
+	<div th:object="${formModel}">
+		<ul class="list-group mb-4">
+			<th:block th:each="fieldName, stat : ${fieldNames}">
+				<li
+					class="list-group-item d-flex justify-content-between align-items-center">
+					<div>
+						<strong th:text="${fieldJapaneseNames.get(stat.index)}"></strong>：
+						<span th:text="*{__${fieldName}__}"></span>
+					</div>
+
+				</li>
+			</th:block>
+		</ul>
+	</div>
+
+
+	<div class="mt-5">
+
+		<div class="d-flex justify-content-between align-items-center mb-3">
+			<h3 class="h4 mb-0">レビュー一覧</h3>
+			<a th:href="@{/restaurant/{id}/review/add(id=*{id})}"
+				class="btn btn-primary btn-sm"> ➕ レビューを追加 </a>
+		</div>
+
+		<div class="table-responsive">
+			<table class="table table-bordered align-middle">
+				<thead class="table-light">
+					<tr>
+						<th th:each="jpName : ${reviewFieldJapaneseNames}"
+							th:if="${jpName != 'コメント'}" th:text="${jpName}"
+							style="width: 25%;">項目名</th>
+					</tr>
+				</thead>
+
+				<tbody th:each="review : ${reviews}" th:object="${review}">
+
+					<tr class="table-group-divider">
+						<td th:each="name : ${reviewFieldNames}"
+							th:if="${name != 'comment'}"><span th:text="*{__${name}__}"
+							th:classappend="${name == 'restaurantName'} ? 'font-weight-bold' : ''">値</span>
+						</td>
+					</tr>
+
+					<tr>
+						<td colspan="4" class="bg-light-subtle px-3 py-2"><small
+							class="text-secondary d-block mb-1">コメント：</small> <span
+							th:text="*{comment}">コメントの内容がここに入ります。</span></td>
+					</tr>
+
+				</tbody>
+			</table>
+		</div>
+
+	</div>
+
+</body>
+</html>
