@@ -19,47 +19,33 @@ import jakarta.validation.constraints.NotBlank;
 public class Restaurant {
 
 	@Id
-
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-
 	private Long id;
 
 	@Column(name = "restaurant_Name", comment = "店名", nullable = false)
-
 	@NotBlank(message = "店名は入力必須です")
-
 	private String restaurantName;
 
 	@Column(name = "genre", comment = "ジャンル")
-
 	private String genre;
 
 	@Column(name = "user_id", comment = "登録者", nullable = false)
-
 	// @NotBlank(message = "登録者は入力必須です")
-
 	private String userId;
 
 	@Column(name = "open_time", comment = "営業開始時間")
-
 	@DateTimeFormat(pattern = "HH:mm") // ← 時間と分だけに指定
-
 	private LocalTime openTime;
 
 	@Column(name = "close_time", comment = "営業終了時間")
-
 	@DateTimeFormat(pattern = "HH:mm") // ← 時間と分だけに指定
-
 	private LocalTime closeTime;
 
 	@Column(name = "adress", comment = "住所", nullable = false)
-
 	@NotBlank(message = "住所は入力必須です")
-
 	private String storingPlace;
 
 	@Column(name = "memo", comment = "コメント")
-
 	private String memo;
 
 	public Long getId() {
