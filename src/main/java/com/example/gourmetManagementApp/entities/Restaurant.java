@@ -1,23 +1,29 @@
 package com.example.gourmetManagementApp.entities;
 
 import java.time.LocalTime;
+
 import java.util.Date;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.CascadeType;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
 import jakarta.persistence.OneToMany;
+
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
 @Entity
+
 @Table(name = "restaurant")
+
 public class Restaurant {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>社員削除</title>
+
+<style>
+body {
+	font-family: "Yu Gothic", sans-serif;
+	background-color: #f4f6f9;
+	margin: 0;
+}
+
+.container {
+	width: 90%;
+	max-width: 600px;
+	margin: 50px auto;
+	background: white;
+	padding: 30px;
+	border-radius: 8px;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+	box-sizing: border-box;
+}
+
+h2 {
+	text-align: center;
+	margin-bottom: 30px;
+	color: #dc3545;
+}
+
+.message {
+	text-align: center;
+	font-size: 18px;
+	margin-bottom: 30px;
+}
+
+.info {
+	margin-bottom: 15px;
+	font-size: 16px;
+}
+
+.button-area {
+	text-align: center;
+	margin-top: 30px;
+}
+
+.delete-btn {
+	width: 120px;
+	height: 40px;
+	background: #dc3545;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.back-btn {
+	width: 120px;
+	height: 40px;
+	background: #6c757d;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+/* タブレット */
+@media screen and (max-width:768px) {
+	.container {
+		width: 95%;
+		padding: 20px;
+	}
+	h2 {
+		font-size: 24px;
+	}
+	.message {
+		font-size: 16px;
+	}
+}
+
+/* スマホ */
+@media screen and (max-width:480px) {
+	.container {
+		width: 98%;
+		padding: 15px;
+	}
+	h2 {
+		font-size: 20px;
+	}
+	.message, .info {
+		font-size: 14px;
+	}
+	.delete-btn, .back-btn {
+		width: 100%;
+		margin: 5px 0;
+	}
+}
+</style>
+
+</head>
+<body>
+
+	<div class="container">
+
+		<h2>レビュー削除</h2>
+
+		<div class="message">こちらのレビューを削除しますか？</div>
+
+		<form th:action="@{/users/reviews/delete}" method="post">
+
+			<input type="hidden" name="id" th:value="${review.id}">
+
+			<div class="info">
+				<strong>店舗名：</strong> <span th:text="${review.restaurantName}"></span>
+			</div>
+
+			<div class="info">
+				<strong>ユーザー名：</strong> <span th:text="${review.userId}"></span>
+			</div>
+
+			<div class="info">
+				<strong>評価：</strong> <span th:text="${review.rating}"></span>
+			</div>
+
+			<div class="info">
+				<strong>投稿日：</strong> <span th:text="${review.createdAt}"></span>
+			</div>
+
+			<div class="info">
+				<strong>コメント：</strong> <span th:text="${review.comment}"></span>
+			</div>
+
+			<div class="button-area">
+
+				<button type="submit" class="delete-btn">削除</button>
+
+				<a th:href="@{/users/reviews}">
+					<button type="button" class="back-btn">キャンセル</button>
+				</a>
+
+			</div>
+
+		</form>
+
+	</div>
+
+</body>
+</html>
