@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.example.gourmetManagementApp.entities.User;
+import com.example.gourmetManagementApp.entities.Users;
 import com.example.gourmetManagementApp.reposities.UserRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -96,7 +96,7 @@ public class SecuriutyController {
 
 		// パスワードハッシュ化、一般ユーザー（ROLE_USER）保存
 		String pass = passwordEncoder.encode(password);
-		User newUser = new User(userId, pass, "ROLE_USER");
+		Users newUser = new Users(userId, pass, "ROLE_USER");
 		repository.save(newUser);
 
 		// 新規登録後、自動ログイン
