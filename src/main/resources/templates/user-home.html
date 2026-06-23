@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>マイページ画面</title>
+
+<style>
+body {
+	font-family: "Yu Gothic", sans-serif;
+	background-color: #f4f6f9;
+}
+
+.container {
+	width: 90%;
+	max-width: 900px;
+	min-height: 550px;
+	margin: 30px auto;
+	border: 1px solid #ccc;
+	background-color: white;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	padding: 20px;
+	position: relative;
+}
+
+h3 {
+	display: inline-block;
+	background-color: #1f3a5f;
+	color: white;
+	font-size: 24px;
+	font-weight: bold;
+	padding: 15px 20px;
+	border-radius: 5px;
+	margin-bottom: 25px;
+	}
+
+.logout {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+}
+
+.logout button {
+	width: 100px;
+	height: 40px;
+	border: none;
+	background-color: #dc3545;
+	color: white;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: 0.3s;
+}
+
+.logout button:hover {
+	background-color: #c82333;
+	transform: translateY(-2px);
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+.text-center {
+	text-align: center;
+	margin-top: 60px;
+	font-size: 26px;
+	font-weight: bold;
+	color: #34495e;
+}
+
+.menu {
+	text-align: center;
+	margin-top: 100px;
+}
+
+.menu button {
+	width: 250px;
+	height: 70px;
+	margin: 20px;
+	font-size: 22px;
+	font-weight: bold;
+	border: none;
+	border-radius: 8px;
+	background-color: #3498db;
+	color: white;
+	cursor: pointer;
+	transition: 0.3s;
+}
+.menu button:hover {
+	background-color: #2980b9;
+	transform: translateY(-2px);
+	box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+/* タブレット */
+@media screen and (max-width: 768px) {
+	.container {
+		width: 95%;
+	}
+	.message {
+		font-size: 22px;
+	}
+	.menu button {
+		width: 200px;
+		height: 60px;
+		font-size: 18px;
+	}
+}
+
+/* スマホ */
+@media screen and (max-width: 480px) {
+	.logout {
+		position: static;
+		text-align: center;
+		margin-top: 10px;
+	}
+	.message {
+		margin-top: 30px;
+		font-size: 18px;
+	}
+	.menu {
+		margin-top: 40px;
+	}
+	.menu button {
+		width: 90%;
+		max-width: 300px;
+		height: 55px;
+		margin: 10px 0;
+		font-size: 16px;
+	}
+}
+</style>
+
+</head>
+<body>
+
+	<div class="container">
+
+		<h3>メイン画面</h3>
+
+		<div class="logout">
+			<button onclick="location.href='/login'">ログアウト</button>
+		</div>
+
+		<h4 class="text-center mb-4">
+			ようこそ、 <span th:text="${userId}"></span> さん
+		</h4>
+
+		<div class="menu">
+
+			<form action="users/reviews" method="get">
+				<button type="submit">投稿レビュー確認</button>
+			</form>
+
+			<form action="/users/restaurants" method="get">
+				<button type="submit">登録飲食店確認</button>
+			</form>
+			<form action="/admin/attendance/list" method="get">
+				<button type="submit">飲食店一覧</button>
+			</form>
+
+		</div>
+
+	</div>
+
+</body>
+</html>

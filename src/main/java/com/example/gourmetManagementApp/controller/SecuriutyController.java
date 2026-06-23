@@ -78,16 +78,16 @@ public class SecuriutyController {
 	}
 
 	@PostMapping("/register")
-	public ModelAndView register(@RequestParam("username") String username, @RequestParam("password") String password,
+	public ModelAndView register(@RequestParam("userId") String userId, @RequestParam("password") String password,
 			HttpServletRequest request, ModelAndView mav) {
 
-		if (username.isBlank() || password.isBlank()) {
+		if (userId.isBlank() || password.isBlank()) {
 			mav.setViewName("redirect:/login");
 			return mav;
 		}
 
 		// 重複チェック
-		if (!repository.findByUserId(username).isEmpty()) {
+		if (!repository.findByUserId(userId).isEmpty()) {
 			mav.setViewName("login");
 			mav.addObject("title", "グルメ管理システム");
 			mav.addObject("msg", "ユーザー名が重複しています");
@@ -96,12 +96,12 @@ public class SecuriutyController {
 
 		// パスワードハッシュ化、一般ユーザー（ROLE_USER）保存
 		String pass = passwordEncoder.encode(password);
-		User newUser = new User(username, pass, "ROLE_USER");
+		User newUser = new User(userId, pass, "ROLE_USER");
 		repository.save(newUser);
 
 		// 新規登録後、自動ログイン
 		try {
-			request.login(username, password);
+			request.login(userId, password);
 			mav.setViewName("redirect:/"); // 登録後(/user-home)に遷移
 		} catch (Exception e) {
 			e.printStackTrace();
