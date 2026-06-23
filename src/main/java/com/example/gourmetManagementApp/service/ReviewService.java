@@ -1,5 +1,5 @@
-package com.example.gourmetManagementApp.service;
-
-public class ReviewService {
-
-}
+//package com.example.gourmetManagementApp.service;
+//
+//public class ReviewService {
+//
+//}
