@@ -20,7 +20,13 @@ public class User {
 
     private String authority;
 
-    public Long getId() {
+    public User(String userId, String password, String authority) {
+		this.userId = userId;
+		this.password = password;
+		this.authority = authority;
+	}
+
+	public Long getId() {
         return id;
     }
 
