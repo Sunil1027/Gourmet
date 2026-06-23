@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>投稿レビュー確認画面</title>
+
+<style>
+body {
+	font-family: "Yu Gothic", sans-serif;
+	background-color: #f4f6f9;
+}
+
+.container {
+	width: 90%;
+	max-width: 1000px;
+	margin: 30px auto;
+	background-color: white;
+	border-radius: 10px;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	padding: 20px;
+	position: relative;
+}
+
+h2 {
+	display: inline-block;
+	background-color: #1f3a5f;
+	color: white;
+	font-size: 24px;
+	font-weight: bold;
+	padding: 15px 20px;
+	border-radius: 5px;
+	margin-bottom: 25px;
+}
+
+
+.back-area {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+}
+
+.back-btn {
+	width: 130px;
+	height: 40px;
+	border: none;
+	border-radius: 5px;
+	background-color: #6c757d;
+	color: white;
+	font-weight: bold;
+	cursor: pointer;
+	transition: 0.3s;
+}
+
+.back-btn:hover {
+	background-color: #5a6268;
+	transform: translateY(-2px);
+}
+
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+th {
+	background-color: #3498db;
+	color: white;
+	padding: 12px;
+	text-align: center;
+}
+
+td {
+	padding: 12px;
+	text-align: center;
+	border-bottom: 1px solid #ddd;
+}
+
+tr:hover {
+	background-color: #f8f9fa;
+}
+
+.star {
+	color: orange;
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.edit-btn {
+	text-decoration: none;
+	background-color: #28a745;
+	color: white;
+	padding: 6px 12px;
+	border-radius: 5px;
+	margin-right: 5px;
+	transition: 0.3s;
+}
+
+.edit-btn:hover {
+	background-color: #218838;
+}
+
+.delete-btn {
+	text-decoration: none;
+	background-color: #dc3545;
+	color: white;
+	padding: 6px 12px;
+	border-radius: 5px;
+	transition: 0.3s;
+}
+
+.delete-btn:hover {
+	background-color: #c82333;
+}
+
+@media screen and (max-width:768px) {
+	.container {
+		width: 95%;
+	}
+	th, td {
+		font-size: 14px;
+		padding: 8px;
+	}
+}
+
+@media screen and (max-width:480px) {
+	.container {
+		width: 98%;
+		padding: 10px;
+	}
+	.back-area {
+		position: static;
+		text-align: right;
+		margin-bottom: 15px;
+	}
+	table {
+		display: block;
+		overflow-x: auto;
+		white-space: nowrap;
+	}
+}
+</style>
+
+</head>
+<body>
+
+	<div class="container">
+
+		<div class="back-area">
+			<form action="/users" method="get">
+				<button type="submit" class="back-btn">ユーザーページへ</button>
+			</form>
+		</div>
+
+		<h2>投稿レビュー一覧</h2>
+		<table>
+
+			<tr>
+				<th>店舗名</th>
+				<th>投稿日</th>
+				<th>評価</th>
+				<th>コメント</th>
+				<th>操作</th>
+			</tr>
+
+			<tr th:each="review : ${list}">
+				<td th:text="${review.restaurantName}"></td>
+				<td th:text="${review.createdAt}"></td>
+				<td th:text="${review.rating}"></td>
+				<td th:text="${review.comment}"></td>
+				<td><a class="edit-btn"
+					th:href="@{/users/reviews/edit/{id}(id=${review.id})}"> 編集 </a> <a
+					class="delete-btn"
+					th:href="@{/users/reviews/delete/{id}(id=${review.id})}"> 削除 </a></td>
+			</tr>
+
+		</table>
+	</div>
+
+</body>
+</html>
