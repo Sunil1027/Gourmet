@@ -1,62 +1,80 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
-	<title>ユーザー管理</title>
+	<title>ユーザー管理（管理者用）</title>
 	<meta charset="UTF-8">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="container mt-4">
 	<div class="d-flex align-items-center mb-4">
 		<h1 class="display-5">
-			
-		
+			<span th:text="${!isSearch ? 'ユーザー管理：' : '検索結果：'}"></span>
+			<span sec:authentication="name"></span>
 		</h1>
-		<a class="btn btn-outline-danger"
-		th:href="@{/logout}">ログアウト</a>
-		<a class="btn btn-success ms-auto"
-		   th:href="@{/foods}">
-			食品管理へ
-		</a>
+		
+		<a class="btn btn-outline-danger ms-auto" th:href="@{/logout}">ログアウト</a>
 	</div>
+	
 	<p class="text-danger" th:text="${msg}"></p>
 	
-	<div class="mb-4">
-		<a class="btn btn-secondary"
-		   th:href="@{/users}">
-			一覧へ戻る
-		</a>
-	</div>
+	<div th:if="${!isSearch}" class="mb-4">
+			<div class="input-group w-50">
+				<input
+					type="text"
+					id="searchKeyword"
+					class="form-control"
+					placeholder="ユーザーIDを入力">
+				<button
+					class="btn btn-primary"
+					type="button"
+					onclick="executeSearch()">
+					検索
+				</button>
+			</div>
+		</div>
+		<div th:if="${isSearch}" class="mb-4">
+				<div class="d-flex align-items-center gap-3">
+					<a class="btn btn-secondary" th:href="@{/admin/users}">
+						検索をリセットして一覧に戻る
+					</a>
+				</div>
+			</div>
+		<script>
+			function executeSearch() {
+				const keyword = document.getElementById('searchKeyword').value;
+				if (keyword.trim() !== "") {
+					window.location.href = "/admin/users/search/" + encodeURIComponent(keyword);
+				}
+			}
+		</script>
+	
 	<h4 class="mb-3">
 		ユーザー一覧
 	</h4>
 
 	<table class="table table-bordered table-hover align-middle">
-
 		<thead class="table-light">
-
 			<tr>
-
 				<th style="width:80%;">
 					ユーザーID
 				</th>
-
 				<th style="width:20%; text-align:center;">
 					操作
 				</th>
-
 			</tr>
-
 		</thead>
-
 		<tbody>
-
-			
-
+			<tr th:each="user : ${data}" th:if="${user.id != 1}">
+				<td th:text="${user.userId}"></td>
+				<td class="text-center">
+					<a class="btn btn-warning btn-sm text-dark"
+						th:href="@{/admin/users/login-as/{id}(id=${user.id})}">確認</a>
+					<a class="btn btn-danger btn-sm"
+					   th:href="@{/admin/users/delete/{id}(id=${user.id})}">削除</a>
+				</td>
+			</tr>
 		</tbody>
-
 	</table>
-
 </body>
-
 </html>

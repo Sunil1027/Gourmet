@@ -118,9 +118,14 @@ public class SecuriutyController {
 		return "user-home";
 	}
 
-	@GetMapping("/admin/users")
-	public String showAdminUserList() {
-		return "users";
-	}
+//	//ユーザー管理(admin)へ遷移
+//	@GetMapping("/admin/users")
+//	public ModelAndView showAdminUserList(ModelAndView mav) {
+//		mav.addObject("isSearch", false);
+//		Iterable<User> userList = repository.findAll();
+//		mav.addObject("data", userList); 
+//		mav.setViewName("users"); 
+//		return mav;
+//	}
 
 }
