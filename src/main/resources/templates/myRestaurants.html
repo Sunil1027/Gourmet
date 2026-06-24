@@ -119,7 +119,7 @@ td {
 
 		</div>
 
-		<div class="title">投稿飲食店一覧</div>
+		<div class="title">個人投稿飲食店一覧</div>
 
 		<div class="table-area">
 
@@ -130,8 +130,8 @@ td {
 					<th>店舗名</th>
 				</tr>
 
-				<tr th:each="restaurant : ${list}">
-					<td th:text="${restaurant.restaurantName}">サンプル店舗</td>
+				<tr th:each="restaurant : ${restaurantList}">
+					<td th:text="${restaurant.restaurantName}"></td>
 				</tr>
 
 			</table>
@@ -143,9 +143,9 @@ td {
 					<th>操作</th>
 				</tr>
 
-				<tr th:each="restaurant : ${list}">
+				<tr th:each="restaurant : ${restaurantList}">
 					<td><a class="detail-btn"
-						th:href="@{/restaurants/detail/{id}(id=${restaurant.id})}"> 詳細
+						th:href="@{/restaurant/detail/{id}(id=${restaurant.id})}"> 詳細
 					</a></td>
 				</tr>
 
