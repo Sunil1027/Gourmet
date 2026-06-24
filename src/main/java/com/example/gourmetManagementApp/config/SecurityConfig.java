@@ -41,10 +41,32 @@ public class SecurityConfig {
                 .requestMatchers("/admin/**").hasRole("ADMIN")                  // 管理者だけ！
                 .anyRequest().authenticated()                                // それ以外はログイン必須
             );
+         
+           // ログイン設定
+           http.formLogin(form -> form
+                   .loginPage("/login")
+                   .usernameParameter("userId")
+                   .passwordParameter("password")
+                   .successHandler((request, response, authentication) -> {
 
-            return http.build();
-        }
+                       String userId = authentication.getName();
 
+                       // セッションに保存
+                       request.getSession().setAttribute("loginUserId", userId);
+
+                       response.sendRedirect("/user-home");
+                   })
+                   .permitAll()
+           );
+
+           // ログアウト設定
+           http.logout(logout -> logout
+                   .logoutUrl("/logout")
+                   .logoutSuccessUrl("/login")
+                   .permitAll());
+
+           return http.build();
+    }
     @Bean
     public org.springframework.security.core.userdetails.UserDetailsService userDetailsService() {
         return userId -> userRepository.findByUserId(userId)

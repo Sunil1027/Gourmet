@@ -4,7 +4,6 @@ package com.example.gourmetManagementApp.reposities;
 import java.util.List;
 import java.util.Optional;
 
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -28,5 +27,9 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 		     + "f.userId LIKE %:word%"
 		)
 	List<Restaurant> findByParam(@Param("word") String param);
+
+
+
+	public List<Restaurant> findByUserId(String  userId);
 
 }
