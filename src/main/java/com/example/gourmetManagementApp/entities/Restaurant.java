@@ -42,6 +42,8 @@ public class Restaurant {
 	private String userId;
 	
 	//private User user;
+	
+	
     
 	@Column(name = "open_time", comment = "営業開始時間")
 	@DateTimeFormat(pattern = "HH:mm") // ← 時間と分だけに指定
