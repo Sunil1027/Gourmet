@@ -15,6 +15,8 @@ import com.example.gourmetManagementApp.entities.Restaurant;
 
 @Repository
 public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
+
+	@Override
 	public Optional<Restaurant> findById(Long num);
 	
 	

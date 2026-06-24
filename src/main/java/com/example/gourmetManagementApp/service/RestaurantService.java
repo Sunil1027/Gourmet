@@ -18,6 +18,8 @@ import jakarta.persistence.Column;
 public class RestaurantService {
 	
 	
+
+
 	public ArrayList<String> generateFieldNames() {
 		Field[] allFields = Restaurant.class.getDeclaredFields();
 
@@ -36,7 +38,6 @@ public class RestaurantService {
 
 		return fieldNames;
 	}
-
 
 	public ArrayList<String> generateJapaneseFieldNames() {
 		Field[] allFields = Restaurant.class.getDeclaredFields();
