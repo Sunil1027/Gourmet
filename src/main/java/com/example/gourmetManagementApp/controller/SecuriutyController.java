@@ -37,14 +37,14 @@ public class SecuriutyController {
 
 	@RequestMapping("/login")
 	public ModelAndView login(ModelAndView mav, @RequestParam(value = "error", required = false) String error,
-			@RequestParam(value = "username", required = false) String username, // 💡 POSTの時だけ送られてくる
+			@RequestParam(value = "userId", required = false) String userId, // 💡 POSTの時だけ送られてくる
 			@RequestParam(value = "password", required = false) String password, // 💡 POSTの時だけ送られてくる
 			HttpServletRequest request) {
 
 		if ("POST".equalsIgnoreCase(request.getMethod())) {
 			try {
 				// 手動ログインを実行
-				request.login(username, password);
+				request.login(userId, password);
 				mav.setViewName("redirect:/"); // 成功したらルート(/)へ遷移
 				return mav;
 			} catch (Exception e) {
