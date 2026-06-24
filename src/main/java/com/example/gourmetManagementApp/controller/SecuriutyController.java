@@ -13,6 +13,7 @@ import com.example.gourmetManagementApp.entities.User;
 import com.example.gourmetManagementApp.reposities.UserRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class SecuriutyController {
@@ -39,7 +40,8 @@ public class SecuriutyController {
 	public ModelAndView login(ModelAndView mav, @RequestParam(value = "error", required = false) String error,
 			@RequestParam(value = "userId", required = false) String userId, // 💡 POSTの時だけ送られてくる
 			@RequestParam(value = "password", required = false) String password, // 💡 POSTの時だけ送られてくる
-			HttpServletRequest request) {
+			HttpServletRequest request, HttpSession session) {
+		
 
 		if ("POST".equalsIgnoreCase(request.getMethod())) {
 			try {
@@ -57,6 +59,7 @@ public class SecuriutyController {
 
 		// ログイン中か確認
 		if (request.getRemoteUser() != null) {
+			session.setAttribute("loginUserId",request.getRemoteUser());
 			if (request.isUserInRole("ADMIN")) {
 				mav.setViewName("redirect:/admin/users");
 				return mav;
