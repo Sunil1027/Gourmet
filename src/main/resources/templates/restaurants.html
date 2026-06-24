@@ -1,0 +1,132 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>view page</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+</head>
+
+
+<body class="container">
+	<style>
+.err {
+	color: red
+}
+</style>
+
+	<!-- 
+	<header
+		class="d-flex justify-content-end align-items-center p-3 bg-light border-bottom">
+		<div class="me-3 text-secondary font-weight-bold">
+			ユーザーID: <span sec:authentication="name"></span>
+		</div>
+		<div sec:authorize="hasRole('ADMIN')" class="me-3">
+			<a th:href="@{/users}" style="font-weight: bold;">ユーザー管理</a>
+		</div>
+		<div>
+			<form th:action="@{/logout}" method="post">
+				<button type="submit" class="btn btn-danger btn-sm">ログアウト</button>
+			</form>
+		</div>
+	</header>
+ -->
+ 
+ 
+ <body class="container">
+
+	<header class="d-flex align-items-center p-3 bg-light border-bottom">
+
+		<div class="me-auto">
+			<a th:href="@{/restaurant}"
+				class="text-dark text-decoration-none fs-3 font-weight-bold"
+				style="font-family: 'Helvetica Neue', Arial, sans-serif; letter-spacing: 0.5px;">
+				Gourmet Clip </a>
+		</div>
+
+		<div class="d-flex align-items-center">
+			<div class="me-3 text-secondary font-weight-bold">
+				ユーザーID: <span>userId（仮）</span>
+			</div>
+
+			<div class="me-3">
+				<a th:href="@{/restaurant}" class="btn btn-outline-secondary btn-sm"
+					style="font-weight: bold;"> &larr; 飲食店一覧へ </a>
+			</div>
+
+			<div class="me-3">
+				<a th:href="@{/restaurant}"
+					class="btn btn-link btn-sm text-decoration-none"
+					style="font-weight: bold; color: #6c757d;">ユーザー管理(仮)</a>
+			</div>
+
+			<div>
+				<a th:href="@{/restaurant}" class="btn btn-danger btn-sm">ログアウト（仮）</a>
+			</div>
+		</div>
+
+	</header>
+
+	<h1 class="display-4 mb-4" th:text="${title}"></h1>
+	<p th:text="${msg}"></p>
+
+	<form method="post" action="/restaurant/search">
+
+		<div class="input-group">
+			<span class="input-group-text">キーワード：</span> <input type="text"
+				class="form-control me-1" name="find_str" th:value="${keywordValue}" />
+			<span class="input-group-btn d-flex gap-1"> <input
+				type="submit" class="btn btn-primary px-4" value="検索" /> <a
+				th:href="@{/restaurant}"
+				class="btn btn-outline-danger px-3 d-flex align-items-center">
+					検索解除 </a>
+			</span>
+		</div>
+	</form>
+
+	<p></p>
+
+	<div class="d-flex align-items-center gap-3 mb-3">
+		<h2 class="mb-0">飲食店一覧</h2>
+
+		<a th:href="@{/restaurant/add}" class="btn btn-success"> <i
+			class="bi bi-plus-lg"></i> 新規追加
+		</a>
+	</div>
+
+	<div>
+		<!--<h3 class="mt-4">📋　検索結果</h3> -->
+		<table class="table">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th th:each="jpName : ${fieldJapaneseNames}" th:text="${jpName}"></th>
+					<th class="border-start" style="border-left-width: 3px;">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="item : ${data}">
+
+					<td th:text="${item.id}"></td>
+					<td th:each="fieldName : ${fieldNames}"
+						th:text="${item[fieldName]}"></td>
+					<td class="border-start" style="border-left-width: 3px;"><a
+						class="btn btn-success btn-sm"
+						th:href="@{/restaurant/detail/{id}(id=${item.id})}"> 詳細 </a> <a
+						class="btn btn-success btn-sm"
+						th:href="@{/restaurant/edit/{id}(id=${item.id})}"> 編集 </a> <a
+						class="btn btn-success btn-sm"
+						th:href="@{/restaurant/edit/{id}(id=${item.id})}"> レビュー </a> <a
+						class="btn btn-danger btn-sm"
+						th:href="@{/restaurant/testDelete/{id}(id=${item.id})}"> 削除 </a>
+					<td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
+</body>
+
+
+</html>

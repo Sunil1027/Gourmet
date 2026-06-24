@@ -2,15 +2,17 @@ package com.example.gourmetManagementApp.entities;
 
 
 import java.util.Date;
-
 import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Column;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
 import jakarta.persistence.Table;
+
 
 @Entity
 @Table(name = "review")
@@ -19,6 +21,8 @@ public class Review {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+
+
 	//@ManyToOne
 	//private Restaurant restaurant;
 	
@@ -26,12 +30,14 @@ public class Review {
 	//@ManyToOne
 	//private User user;
 
+
 	@Column(name = "create_at", comment = "投稿日時")
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
 	private Date createAt;
 
 	@Column(name = "rating", comment = "1~5評価", nullable = false)
 	private int rating;
+
 
 	@Column(name = "title", comment = "タイトル")
 	private String title;
@@ -63,6 +69,7 @@ public class Review {
 		this.rating = rating;
 	}
 
+
 	public String getTitle() {
 		return title;
 	}
@@ -71,6 +78,7 @@ public class Review {
 		this.title = title;
 	}
 
+
 	public String getComment() {
 		return comment;
 	}
@@ -78,10 +86,9 @@ public class Review {
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	
-	
 
 	
 	
 
 }
+

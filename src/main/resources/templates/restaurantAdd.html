@@ -1,0 +1,97 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>Add Restaurant Page</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+</head>
+
+<body class="container">
+	<style>
+.err {
+	color: red
+}
+</style>
+
+<header class="d-flex align-items-center p-3 bg-light border-bottom">
+
+		<div class="me-auto">
+			<a th:href="@{/restaurant}"
+				class="text-dark text-decoration-none fs-3 font-weight-bold"
+				style="font-family: 'Helvetica Neue', Arial, sans-serif; letter-spacing: 0.5px;">
+				Gourmet Clip </a>
+		</div>
+
+		<div class="d-flex align-items-center">
+			<div class="me-3 text-secondary font-weight-bold">
+				ユーザーID: <span>userId（仮）</span>
+			</div>
+
+			<div class="me-3">
+				<a th:href="@{/restaurant}" class="btn btn-outline-secondary btn-sm"
+					style="font-weight: bold;"> &larr; 飲食店一覧へ </a>
+			</div>
+
+			<div class="me-3">
+				<a th:href="@{/restaurant}"
+					class="btn btn-link btn-sm text-decoration-none"
+					style="font-weight: bold; color: #6c757d;">ユーザー管理(仮)</a>
+			</div>
+
+			<div>
+				<a th:href="@{/restaurant}" class="btn btn-danger btn-sm">ログアウト（仮）</a>
+			</div>
+		</div>
+
+	</header>
+
+
+
+
+
+	<h1 class="display-4 mb-4" th:text="${title}"></h1>
+	<p th:text="${msg}"></p>
+
+	<form method="post" action="/restaurant/register" th:object="${formModel}">
+
+		<div class="mb-3" th:each="fieldName, stat : ${fieldNames}">
+
+			<label class="form-label"
+				th:text="${fieldJapaneseNames.get(stat.index)}"></label>
+
+			<div th:switch="${fieldName}">
+
+				<textarea th:case="'memo'" class="form-control"
+					th:name="${fieldName}" th:text="*{__${fieldName}__}"
+					th:errorclass="err"></textarea>
+<!--
+				<input th:case="'userId'" type="text" class="form-control"
+					th:name="${fieldName}" th:value="${loginUserId}" readonly /> 
+-->					
+					<input
+					th:case="'openTime'" type="time" class="form-control"
+					th:name="${fieldName}" th:value="*{__${fieldName}__}"
+					th:errorclass="err" /> <input th:case="'closeTime'" type="time"
+					class="form-control" th:name="${fieldName}"
+					th:value="*{__${fieldName}__}" th:errorclass="err" /> <input
+					th:case="*" type="text" class="form-control" th:name="${fieldName}"
+					th:value="*{__${fieldName}__}" th:errorclass="err" />
+
+			</div>
+			<div th:if="${#fields.hasErrors('__${fieldName}__')}"
+				th:errors="*{__${fieldName}__}" th:errorclass="err"></div>
+		</div>
+
+		<div class="d-flex gap-2">
+			<input type="submit" class="btn btn-primary" value="Create" /> <a
+				th:href="@{/restaurant}" class="btn btn-secondary">Cancel</a>
+		</div>
+	</form>
+
+
+</body>
+
+
+</html>

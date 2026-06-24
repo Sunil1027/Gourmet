@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import com.example.gourmetManagementApp.entities.Restaurant;
 import com.example.gourmetManagementApp.reposities.RestaurantRepository;
 
@@ -15,6 +16,9 @@ import jakarta.persistence.Column;
 
 @Service
 public class RestaurantService {
+	
+	
+
 
 	public ArrayList<String> generateFieldNames() {
 		Field[] allFields = Restaurant.class.getDeclaredFields();

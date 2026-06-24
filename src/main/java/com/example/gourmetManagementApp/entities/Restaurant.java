@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
@@ -17,12 +18,12 @@ import jakarta.validation.constraints.NotBlank;
 @Table(name = "restaurant")
 
 public class Restaurant {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column(name = "restaurant_Name", comment = "店名", nullable = false)
+
 	@NotBlank(message = "店名は入力必須です")
 	private String restaurantName;
 
@@ -31,7 +32,10 @@ public class Restaurant {
 
 	@Column(name = "user_id", comment = "登録者", nullable = false)
 	// @NotBlank(message = "登録者は入力必須です")
+
 	private String userId;
+
+	// private User user;
 
 	@Column(name = "open_time", comment = "営業開始時間")
 	@DateTimeFormat(pattern = "HH:mm") // ← 時間と分だけに指定
@@ -39,9 +43,11 @@ public class Restaurant {
 
 	@Column(name = "close_time", comment = "営業終了時間")
 	@DateTimeFormat(pattern = "HH:mm") // ← 時間と分だけに指定
+
 	private LocalTime closeTime;
 
 	@Column(name = "adress", comment = "住所", nullable = false)
+
 	@NotBlank(message = "住所は入力必須です")
 	private String storingPlace;
 
@@ -113,6 +119,7 @@ public class Restaurant {
 	}
 
 	// ★ 1:N の関連付け（mappedByを指定）
+
 	// CascadeType.ALL や orphanRemoval は、店が消えたらレビューも自動削除したい場合に付与します
 	// @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval
 	// = true)
