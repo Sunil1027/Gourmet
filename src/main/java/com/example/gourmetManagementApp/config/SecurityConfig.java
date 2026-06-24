@@ -47,14 +47,14 @@ public class SecurityConfig {
 
     @Bean
     public org.springframework.security.core.userdetails.UserDetailsService userDetailsService() {
-        return username -> userRepository.findByUserId(username)
+        return userId -> userRepository.findByUserId(userId)
             .map(user -> org.springframework.security.core.userdetails.User
                 .withUsername(user.getUserId())   // エンティティのIDを取得
                 .password(user.getPassword())     // エンティティの暗号化パスワードを取得
                 .authorities(user.getAuthority()) // 権限（ROLE_USERやROLE_ADMIN）を取得
                 .build())
             .orElseThrow(() -> new org.springframework.security.core.userdetails.
-            		UsernameNotFoundException("ユーザー名が見つかりません: " + username));
+            		UsernameNotFoundException("ユーザー名が見つかりません: " + userId));
     }
     
     //CommandLineRunner　アプリ起動後、一度だけ実行
