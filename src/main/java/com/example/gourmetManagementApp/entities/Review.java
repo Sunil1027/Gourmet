@@ -2,10 +2,10 @@ package com.example.gourmetManagementApp.entities;
 
 
 import java.util.Date;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Column;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

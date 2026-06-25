@@ -12,12 +12,13 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
 	Optional<Review> findById(long id);
 	
-	void deleteByRestaurantId(Long restaurantId);
+	void deleteByRestaurant_Id(Long restaurantId);
+	List<Review> findByRestaurant_Id(Long id);
+	 List<Review> findByUserId(String userId);
 
-	@Override
-	void deleteById(Long id);
+	 void deleteByRestaurantId(long id);
 
-	
-	List<Review> findByRestaurantId(int id);
+	 @Nullable
+	 Object findByRestaurantId(int id);
 
 }

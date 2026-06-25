@@ -45,7 +45,8 @@ h2 {
 	top: 20px;
 	left: 20px;
 	font-size: 16px;
-	color: #ffffff; background : #3498db;
+	color: #ffffff;
+	background: #3498db;
 	padding: 8px 12px;
 	border-radius: 6px;
 	background: #3498db;
@@ -190,9 +191,9 @@ tr:hover {
 				<th>操作</th>
 			</tr>
 
-			<tr th:each="review : ${list}">
-				<td th:text="${review.restaurantName}"></td>
-				<td th:text="${review.createdAt}"></td>
+			<tr th:each="review : ${reviews}">
+				<td th:text="${review.restaurant.restaurantName}"></td>
+				<td th:text="${review.createAt}"></td>
 				<td th:text="${review.rating}"></td>
 				<td th:text="${review.comment}"></td>
 				<td><a class="edit-btn"
@@ -200,7 +201,6 @@ tr:hover {
 					class="delete-btn"
 					th:href="@{/users/reviews/delete/{id}(id=${review.id})}"> 削除 </a></td>
 			</tr>
-
 		</table>
 	</div>
 
