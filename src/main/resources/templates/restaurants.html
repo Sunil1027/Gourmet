@@ -32,9 +32,7 @@
 		</div>
 	</header>
  -->
- 
- 
- <body class="container">
+<body class="container">
 
 	<header class="d-flex align-items-center p-3 bg-light border-bottom">
 
@@ -47,7 +45,7 @@
 
 		<div class="d-flex align-items-center">
 			<div class="me-3 text-secondary font-weight-bold">
-				ユーザーID: <span>userId（仮）</span>
+				ユーザーID: <span th:text="${#authentication.name}">userId</span>
 			</div>
 
 			<div class="me-3">
@@ -55,14 +53,14 @@
 					style="font-weight: bold;"> &larr; 飲食店一覧へ </a>
 			</div>
 
-			<div class="me-3">
-				<a th:href="@{/restaurant}"
+			<div class="me-3" sec:authorize="hasRole('ADMIN')">
+				<a th:href="@{/admin/users}"
 					class="btn btn-link btn-sm text-decoration-none"
-					style="font-weight: bold; color: #6c757d;">ユーザー管理(仮)</a>
+					style="font-weight: bold; color: #6c757d;">ユーザー管理</a>
 			</div>
 
 			<div>
-				<a th:href="@{/restaurant}" class="btn btn-danger btn-sm">ログアウト（仮）</a>
+				<a th:href="@{/logout}" class="btn btn-danger btn-sm">ログアウト</a>
 			</div>
 		</div>
 
@@ -117,9 +115,9 @@
 						class="btn btn-success btn-sm"
 						th:href="@{/restaurant/edit/{id}(id=${item.id})}"> 編集 </a> <a
 						class="btn btn-success btn-sm"
-						th:href="@{/restaurant/edit/{id}(id=${item.id})}"> レビュー </a> <a
-						class="btn btn-danger btn-sm"
-						th:href="@{/restaurant/testDelete/{id}(id=${item.id})}"> 削除 </a>
+						th:href="@{/restaurant/{id}/review/add(id=${item.id})}"> レビュー
+					</a> <a class="btn btn-danger btn-sm" sec:authorize="hasRole('ADMIN')"
+						th:href="@{admin/restaurant/delete/{id}(id=${item.id})}"> 削除 </a>
 					<td>
 				</tr>
 			</tbody>

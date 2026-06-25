@@ -21,6 +21,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 	
 	
 	
+	
 	@Query("SELECT f FROM Restaurant f WHERE " 
 		     + "f.restaurantName LIKE %:word% OR " 
 		     + "f.genre LIKE %:word% OR "

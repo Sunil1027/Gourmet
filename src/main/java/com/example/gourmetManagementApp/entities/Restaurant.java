@@ -9,7 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 
@@ -32,9 +32,9 @@ public class Restaurant {
 
 	@Column(name = "user_id", comment = "登録者", nullable = false)
 	// @NotBlank(message = "登録者は入力必須です")
-
 	private String userId;
-
+	
+    //@ManyToOne
 	// private User user;
 
 	@Column(name = "open_time", comment = "営業開始時間")

@@ -23,7 +23,7 @@
 
 		<div class="d-flex align-items-center">
 			<div class="me-3 text-secondary font-weight-bold">
-				ユーザーID: <span>userId（仮）</span>
+				ユーザーID: <span th:text="${#authentication.name}">userId</span>
 			</div>
 
 			<div class="me-3">
@@ -31,14 +31,14 @@
 					style="font-weight: bold;"> &larr; 飲食店一覧へ </a>
 			</div>
 
-			<div class="me-3">
-				<a th:href="@{/restaurant}"
+			<div class="me-3" sec:authorize="hasRole('ADMIN')">
+				<a th:href="@{/admin/users}"
 					class="btn btn-link btn-sm text-decoration-none"
-					style="font-weight: bold; color: #6c757d;">ユーザー管理(仮)</a>
+					style="font-weight: bold; color: #6c757d;">ユーザー管理</a>
 			</div>
 
 			<div>
-				<a th:href="@{/restaurant}" class="btn btn-danger btn-sm">ログアウト（仮）</a>
+				<a th:href="@{/logout}" class="btn btn-danger btn-sm">ログアウト</a>
 			</div>
 		</div>
 
@@ -61,8 +61,8 @@
 		<div class="d-flex gap-2">
 			<a th:href="@{/restaurant/edit/{id}(id=${formModel.id})}"
 				class="btn btn-primary">編集</a> <a
-				th:href="@{/restaurant/delete/{id}(id=${formModel.id})}"
-				class="btn btn-danger">削除</a>
+				th:href="@{/admin/restaurant/delete/{id}(id=${formModel.id})}"
+				class="btn btn-danger" sec:authorize="hasRole('ADMIN')">削除</a>
 		</div>
 	</div>
 
@@ -86,35 +86,33 @@
 
 		<div class="d-flex justify-content-between align-items-center mb-3">
 			<h3 class="h4 mb-0">レビュー一覧</h3>
-			<a th:href="@{/restaurant/{id}/review/add(id=*{id})}"
+			<a th:href="@{/restaurant/{id}/review/add(id=${formModel.id})}"
 				class="btn btn-primary btn-sm"> ➕ レビューを追加 </a>
 		</div>
 
-		<div class="table-responsive">
-			<table class="table table-bordered align-middle">
-				<thead class="table-light">
+		<div class="mb-5" th:each="review : ${reviews}" th:object="${review}">
+			<table class="table table-bordered align-middle mb-0">
+				<thead class="table-secondary">
 					<tr>
 						<th th:each="jpName : ${reviewFieldJapaneseNames}"
 							th:if="${jpName != 'コメント'}" th:text="${jpName}"
-							style="width: 25%;">項目名</th>
+							style="width: 25%;" class="small py-1">項目名</th>
 					</tr>
 				</thead>
 
-				<tbody th:each="review : ${reviews}" th:object="${review}">
-
-					<tr class="table-group-divider">
+				<tbody>
+					<tr>
 						<td th:each="name : ${reviewFieldNames}"
 							th:if="${name != 'comment'}"><span th:text="*{__${name}__}"
-							th:classappend="${name == 'restaurantName'} ? 'font-weight-bold' : ''">値</span>
+							th:classappend="${name == 'restaurant.restaurantName'} ? 'fw-bold' : ''">値</span>
 						</td>
 					</tr>
 
 					<tr>
-						<td colspan="4" class="bg-light-subtle px-3 py-2"><small
+						<td colspan="10" class="bg-light-subtle px-3 py-2"><small
 							class="text-secondary d-block mb-1">コメント：</small> <span
-							th:text="*{comment}">コメントの内容がここに入ります。</span></td>
+							th:text="*{comment}">コメントの内容</span></td>
 					</tr>
-
 				</tbody>
 			</table>
 		</div>
