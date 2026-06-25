@@ -184,9 +184,11 @@ public class RestaurantController {
 	}
 
 	@RequestMapping(value = "/{id}/review/add", method = RequestMethod.GET)
-	public ModelAndView showReviewAdd(@PathVariable Long id, ModelAndView mav) {
+	public ModelAndView showReviewAdd(@PathVariable Long id,@RequestHeader(name = "referer", required = false) String referer, ModelAndView mav) {
 
 		mav.setViewName("reviewAdd");
+		System.out.println(referer);
+		mav.addObject("cancelUrl", referer);
 
 		Optional<Restaurant> data = restaurantRepository.findById((long) id);
 		mav.addObject("restaurant", data.get());
