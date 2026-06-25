@@ -67,10 +67,10 @@
 				<td th:text="${item.storingPlace}"></td>
 				<td class="text-center">
 					<div class="d-flex gap-1 justify-content-center">
-						<a class="btn btn-success btn-sm" th:href="@{/admin/a_restaurants/detail/{id}(id=${item.id})}">
+						<a class="btn btn-success btn-sm" th:href="@{/restaurants/detail/{id}(id=${item.id})}">
 							詳細
 						</a>
-						<a class="btn btn-danger btn-sm" th:href="@{/admin/a_restaurants/delete/{id}(id=${item.id})}">
+						<a class="btn btn-danger btn-sm" th:href="@{/a_restaurants/delete/{id}(id=${item.id})}">
 							削除
 						</a>
 					</div>
