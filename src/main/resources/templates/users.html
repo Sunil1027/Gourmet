@@ -12,7 +12,7 @@
 			<span th:text="${!isSearch ? 'ユーザー管理：' : '検索結果：'}"></span>
 			<span sec:authentication="name"></span>
 		</h1>
-		
+		<a class="btn btn-outline-primary" th:href="@{/admin/a_restaurants}">飲食店一覧</a>
 		<a class="btn btn-outline-danger ms-auto" th:href="@{/logout}">ログアウト</a>
 	</div>
 	
