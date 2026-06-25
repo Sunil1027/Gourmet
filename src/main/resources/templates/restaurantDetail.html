@@ -100,8 +100,13 @@
 				<tbody>
 					<tr>
 						<td th:each="name : ${reviewFieldNames}"
-							th:if="${name != 'comment'}"><span th:text="*{__${name}__}"
+							th:if="${name != 'comment'}"><span
+							th:if="${name == 'createAt'}"
+							th:text="${#temporals.format(review.createAt, 'yyyy/MM/dd HH:mm')}">日時</span>
+
+							<span th:if="${name != 'createAt'}" th:text="*{__${name}__}"
 							th:classappend="${name == 'restaurant.restaurantName'} ? 'fw-bold' : ''">値</span>
+
 						</td>
 					</tr>
 

@@ -15,23 +15,6 @@
 	color: red
 }
 </style>
-
-	<!-- 
-	<header
-		class="d-flex justify-content-end align-items-center p-3 bg-light border-bottom">
-		<div class="me-3 text-secondary font-weight-bold">
-			ユーザーID: <span sec:authentication="name"></span>
-		</div>
-		<div sec:authorize="hasRole('ADMIN')" class="me-3">
-			<a th:href="@{/users}" style="font-weight: bold;">ユーザー管理</a>
-		</div>
-		<div>
-			<form th:action="@{/logout}" method="post">
-				<button type="submit" class="btn btn-danger btn-sm">ログアウト</button>
-			</form>
-		</div>
-	</header>
- -->
 <body class="container">
 
 	<header class="d-flex align-items-center p-3 bg-light border-bottom">
@@ -44,13 +27,16 @@
 		</div>
 
 		<div class="d-flex align-items-center">
-			<div class="me-3 text-secondary font-weight-bold">
-				ユーザーID: <span th:text="${#authentication.name}">userId</span>
+			<div class="me-3 font-weight-bold">
+				<a
+					th:href="${#authorization.expression('hasRole(''ADMIN'')')} ? @{/admin/users} : @{/user-home}"
+					class="text-secondary text-decoration-none"> ユーザーID: <span
+					th:text="${#authentication.name}">userId</span>
+				</a>
 			</div>
-
 			<div class="me-3">
 				<a th:href="@{/restaurant}" class="btn btn-outline-secondary btn-sm"
-					style="font-weight: bold;"> &larr; 飲食店一覧へ </a>
+					style="font-weight: bold;"> 飲食店一覧</a>
 			</div>
 
 			<div class="me-3" sec:authorize="hasRole('ADMIN')">
@@ -99,7 +85,8 @@
 			<thead>
 				<tr>
 					<th>ID</th>
-					<th th:each="jpName : ${fieldJapaneseNames}" th:text="${jpName}"></th>
+					<th th:each="jpName : ${fieldJapaneseNames}"
+						th:if="${jpName != '住所' && jpName != 'メモ'}" th:text="${jpName}"></th>
 					<th class="border-start" style="border-left-width: 3px;">操作</th>
 				</tr>
 			</thead>
@@ -108,6 +95,7 @@
 
 					<td th:text="${item.id}"></td>
 					<td th:each="fieldName : ${fieldNames}"
+						th:if="${fieldName != 'address' && fieldName != 'memo'}"
 						th:text="${item[fieldName]}"></td>
 					<td class="border-start" style="border-left-width: 3px;"><a
 						class="btn btn-success btn-sm"
@@ -118,7 +106,7 @@
 						th:href="@{/restaurant/{id}/review/add(id=${item.id})}"> レビュー
 					</a> <a class="btn btn-danger btn-sm" sec:authorize="hasRole('ADMIN')"
 						th:href="@{admin/restaurant/delete/{id}(id=${item.id})}"> 削除 </a>
-					<td>
+					</td>
 				</tr>
 			</tbody>
 		</table>

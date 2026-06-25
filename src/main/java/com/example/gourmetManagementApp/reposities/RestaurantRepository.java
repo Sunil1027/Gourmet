@@ -16,7 +16,7 @@ import com.example.gourmetManagementApp.entities.Restaurant;
 public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 
 	@Override
-	public Optional<Restaurant> findById(Long num);
+	Optional<Restaurant> findById(Long num);
 	
 	
 	
@@ -31,6 +31,6 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 
 
 
-	public List<Restaurant> findByUserId(String  userId);
+	List<Restaurant> findByUserId(String  userId);
 
 }

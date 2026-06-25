@@ -14,8 +14,6 @@
 	color: red
 }
 </style>
-
-
 <body class="container">
 
 	<header class="d-flex align-items-center p-3 bg-light border-bottom">
@@ -56,12 +54,13 @@
 	<h1 class="display-4 mb-4" th:text="${title}"></h1>
 	<p th:text="${msg}"></p>
 
-	<form method="post" action="/restaurant/update" th:object="${formModel}">
-	
-	    <div class="mb-3">
-				<label class="form-label">ID</label> <input type="text"
-					class="form-control" th:field="*{id}" readonly />
-			</div>
+	<form method="post" action="/restaurant/update"
+		th:object="${formModel}">
+
+		<div class="mb-3">
+			<label class="form-label">ID</label> <input type="text"
+				class="form-control" th:field="*{id}" readonly />
+		</div>
 
 		<div class="mb-3" th:each="fieldName, stat : ${fieldNames}">
 
@@ -75,8 +74,7 @@
 					th:errorclass="err"></textarea>
 
 				<input th:case="'userId'" type="text" class="form-control"
-					th:name="${fieldName}" th:value="${loginUserId}" readonly /> 			
-					<input
+					th:name="${fieldName}" th:value="${loginUserId}" readonly /> <input
 					th:case="'openTime'" type="time" class="form-control"
 					th:name="${fieldName}" th:value="*{__${fieldName}__}"
 					th:errorclass="err" /> <input th:case="'closeTime'" type="time"
@@ -92,7 +90,8 @@
 
 		<div class="d-flex gap-2">
 			<input type="submit" class="btn btn-primary" value="Update" /> <a
-				th:href="@{/restaurant}" class="btn btn-secondary">Cancel</a>
+				th:href="${cancelUrl} ?: @{/restaurant}"
+				class="btn btn-outline-secondary"> Cancel </a>
 		</div>
 	</form>
 

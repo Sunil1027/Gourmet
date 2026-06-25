@@ -193,7 +193,7 @@ tr:hover {
 
 			<tr th:each="review : ${reviews}">
 				<td th:text="${review.restaurant.restaurantName}"></td>
-				<td th:text="${review.createAt}"></td>
+				<td th:text="${#temporals.format(review.createAt, 'yyyy/MM/dd HH:mm')}"></td>
 				<td th:text="${review.rating}"></td>
 				<td th:text="${review.comment}"></td>
 				<td><a class="edit-btn"

@@ -124,7 +124,7 @@ h2 {
 			</div>
 
 			<div class="info">
-				<strong>投稿日：</strong> <span th:text="${review.createAt}"></span>
+				<strong>投稿日：</strong> <span th:text="${#temporals.format(review.createAt, 'yyyy/MM/dd HH:mm')}"></span>
 			</div>
 
 			<div class="info">
