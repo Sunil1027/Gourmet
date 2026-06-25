@@ -2,9 +2,9 @@ package com.example.gourmetManagementApp.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,6 +21,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.example.gourmetManagementApp.entities.Restaurant;
 import com.example.gourmetManagementApp.entities.Review;
 import com.example.gourmetManagementApp.reposities.RestaurantRepository;
+import com.example.gourmetManagementApp.reposities.ReviewRepository;
 import com.example.gourmetManagementApp.service.RestaurantService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,12 +33,16 @@ import jakarta.transaction.Transactional;
 public class RestaurantController {
 	@Autowired
 	RestaurantRepository restaurantRepository;
+
+	@Autowired
+	ReviewRepository reviewRepository;
+
 	@Autowired
 	private RestaurantService restaurantService;
 
 	@RequestMapping("")
 	public ModelAndView showRestaurant(@ModelAttribute("formModel") Restaurant food, ModelAndView mav) {
-		// String userId=Service.getLoginUserId();
+		// String userId=restaurantService.getLoginUserId();
 
 		mav.setViewName("restaurants");
 		mav.addObject("title", "Restaurant Page");
@@ -88,7 +93,7 @@ public class RestaurantController {
 		mav.addObject("title", "Add Page ");
 		mav.addObject("msg", "Restaurant Add Page ");
 		mav.addObject("formModel", restaurant);
-		// mav.addObject("loginUserId", restaurantService.getLoginUserId());
+		mav.addObject("loginUserId", restaurantService.getLoginUserId());
 
 		mav.addObject("fieldJapaneseNames", restaurantService.generateJapaneseFieldNames());
 		mav.addObject("fieldNames", restaurantService.generateFieldNames());
@@ -102,6 +107,7 @@ public class RestaurantController {
 		ModelAndView res = null;
 		System.out.println(result.getFieldErrors());
 		if (!result.hasErrors()) {
+			restaurant.setUserId(restaurantService.getLoginUserId()); // ログインしているユーザーIDをセット
 			restaurantRepository.saveAndFlush(restaurant);
 			res = new ModelAndView("redirect:/restaurant");
 		} else {// バリデーション結果表示
@@ -116,13 +122,13 @@ public class RestaurantController {
 	}
 
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
-	public ModelAndView editFood(@ModelAttribute("formModel") Restaurant restaurant, @PathVariable int id,
+	public ModelAndView editRestaurant(@ModelAttribute("formModel") Restaurant restaurant, @PathVariable int id,
 			ModelAndView mav) {
 		mav.setViewName("restaurantEdit");
 		mav.addObject("title", "edit Restaurant.");
 		Optional<Restaurant> data = restaurantRepository.findById((long) id);
 		mav.addObject("formModel", data.get());
-		// mav.addObject("loginUserId", restaurantService.getLoginUserId());
+		mav.addObject("loginUserId", restaurantService.getLoginUserId());
 
 		mav.addObject("fieldNames", restaurantService.generateFieldNames());
 		mav.addObject("fieldJapaneseNames", restaurantService.generateJapaneseFieldNames());
@@ -131,8 +137,8 @@ public class RestaurantController {
 
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	@Transactional
-	public ModelAndView updateFood(@ModelAttribute("formModel") @Validated Restaurant restaurant, BindingResult result,
-			ModelAndView mav) {
+	public ModelAndView updateRestaurant(@ModelAttribute("formModel") @Validated Restaurant restaurant,
+			BindingResult result, ModelAndView mav) {
 		ModelAndView res = null;
 		System.out.println(result.getFieldErrors());
 		if (!result.hasErrors()) {
@@ -160,65 +166,103 @@ public class RestaurantController {
 
 		Optional<Restaurant> data = restaurantRepository.findById((long) id);
 		mav.addObject("formModel", data.get());
-		// mav.addObject("loginUserId", restaurantService.getLoginUserId());
+		mav.addObject("loginUserId", restaurantService.getLoginUserId());
 		mav.addObject("fieldNames", restaurantService.generateFieldNames());
 		mav.addObject("fieldJapaneseNames", restaurantService.generateJapaneseFieldNames());
 
 		// Controller内でレビュー用の項目リストを用意して送る
-		List<String> reviewFields = Arrays.asList("restaurantName", "userName", "evaluation", "createdAt", "comment");
-		List<String> reviewJpFields = Arrays.asList("店舗名", "ユーザー名", "評価", "投稿日", "コメント");
+		List<String> reviewFields = Arrays.asList("userId", "title", "rating", "createAt", "comment");
+		List<String> reviewJpFields = Arrays.asList("投稿者", "タイトル", "評価", "投稿日時", "コメント");
 
 		mav.addObject("reviewFieldNames", reviewFields);
 		mav.addObject("reviewFieldJapaneseNames", reviewJpFields);
 
-		// 💡 実際はリポジトリからこのお店のレビュー一覧を取得して渡す
-		// mav.addObject("reviews", reviewService.findByRestaurantId(id));
+		// 💡 リポジトリからこのお店のレビュー一覧を取得して渡す
+		mav.addObject("reviews", reviewRepository.findByRestaurantId(id));
 
 		return mav;
 	}
 
-	@RequestMapping(value = "/detail/{id}/review/add", method = RequestMethod.GET)
-	public ModelAndView showReviewAdd(@ModelAttribute("form") @Validated Review review, @PathVariable Long id,
-			ModelAndView mav) {
+	@RequestMapping(value = "/{id}/review/add", method = RequestMethod.GET)
+	public ModelAndView showReviewAdd(@PathVariable Long id,@RequestHeader(name = "referer", required = false) String referer, ModelAndView mav) {
 
 		mav.setViewName("reviewAdd");
-		return mav;
-	}
-
-	@RequestMapping(value = "/detail/{id}/review/confirm", method = RequestMethod.POST)
-	public ModelAndView confirmReview(@ModelAttribute("form") Review review, @PathVariable Long id, ModelAndView mav) {
-
-		mav.setViewName("reviewConfirm");
-		return mav;
-	}
-
-	@RequestMapping(value = "/detail/{id}/review/register", method = RequestMethod.POST)
-	public ModelAndView registerReview(@ModelAttribute("form") Review review, @PathVariable Long id, ModelAndView mav) {
-
-		mav.setViewName("reviewConfirm");
-		return new ModelAndView("redirect:/restaurant");
-	}
-
-	@RequestMapping(value = "/testDelete/{id}", method = RequestMethod.GET)
-	public ModelAndView showDeleteFood(@PathVariable int id, HttpServletRequest request, ModelAndView mav) {
-		mav.setViewName("testDelete");
-		mav.addObject("title", "Delete Restaurant.");
-		mav.addObject("msg", "Can I delete this record?");
-		Optional<Restaurant> data = restaurantRepository.findById((long) id);
-		// String loginUserId = restaurantService.getLoginUserId();
-		mav.addObject("formModel", data.get());
-		mav.addObject("fieldNames", restaurantService.generateFieldNames());
-		mav.addObject("fieldJapaneseNames", restaurantService.generateJapaneseFieldNames());
-		return mav;
-	}
-
-	@RequestMapping(value = "/testDelete", method = RequestMethod.POST)
-	@Transactional
-	public ModelAndView excuteDeleteFood(@RequestParam long id,
-			@RequestHeader(value = "referer", required = false) String referer, ModelAndView mav) {
-		restaurantRepository.deleteById(id);
 		System.out.println(referer);
-		return new ModelAndView("redirect:/restaurant");
+		mav.addObject("cancelUrl", referer);
+
+		Optional<Restaurant> data = restaurantRepository.findById((long) id);
+		mav.addObject("restaurant", data.get());
+		mav.addObject("loginUserId", restaurantService.getLoginUserId());
+
+		mav.addObject("reviewForm", new Review());
+
+		// 英語のフィールド名リスト（※ restaurant や user、createAt はループから除外）
+		List<String> fieldNames = Arrays.asList("userId", "title", "rating", "comment");
+		mav.addObject("fieldNames", fieldNames);
+		// 日本語のラベル名リスト（上の英語リストと「順番」を完全に一致）
+		List<String> fieldJapaneseNames = Arrays.asList("投稿者", "タイトル", "評価（1〜5）", "レビュー内容");
+		mav.addObject("fieldJapaneseNames", fieldJapaneseNames);
+		return mav;
 	}
+
+	@RequestMapping(value = "/{restaurantId}/review/confirm", method = RequestMethod.POST)
+	public ModelAndView confirmReview(@ModelAttribute("reviewForm") Review review, BindingResult result,
+			@PathVariable Long restaurantId, ModelAndView mav) {
+
+		ModelAndView res = null;
+		System.out.println(result.getFieldErrors());
+		if (!result.hasErrors()) {
+
+			mav.setViewName("reviewConfirm");
+			System.out.println("Confirm");
+			// URLの {retaurantId} からレストランのデータを取得
+			Optional<Restaurant> data = restaurantRepository.findById((long) restaurantId);
+			// 取得したレストランを、これから保存する review オブジェクトに手動でセット（紐付け）
+			review.setRestaurant(data.get());
+
+			mav.addObject("restaurant", data.get());
+			// review.setCreateAt(new Date());
+
+			List<String> fieldNames = Arrays.asList("userId", "title", "rating", "comment");
+			mav.addObject("fieldNames", fieldNames);
+			// 日本語のラベル名リスト（上の英語リストと「順番」を完全に一致）
+			List<String> fieldJapaneseNames = Arrays.asList("投稿者", "タイトル", "評価（1〜5）", "レビュー内容");
+			mav.addObject("fieldJapaneseNames", fieldJapaneseNames);
+
+			res = mav;
+		} else {// バリデーション結果表示
+			mav.setViewName("reviewAdd");
+			mav.addObject("title", "Review Register Page (error)");
+			mav.addObject("msg", "sorry, error is occurred...");
+//			mav.addObject("reviewForm", review);
+//			List<String> fieldNames = Arrays.asList("userId","title", "rating", "comment");
+//			mav.addObject("fieldNames", fieldNames);
+//
+//			List<String> fieldJapaneseNames = Arrays.asList("タイトル", "評価（1〜5）", "レビュー内容");
+//			mav.addObject("fieldJapaneseNames", fieldJapaneseNames);	
+			res = mav;
+		}
+		return res;
+
+	}
+
+	@Transactional
+	@RequestMapping(value = "/{restaurantId}/review/register", method = RequestMethod.POST)
+	public ModelAndView registerReview(@ModelAttribute("reviewForm") Review review, @PathVariable Long restaurantId,
+			ModelAndView mav) {
+
+		System.out.println("Register");
+
+		// URLの {retaurantId} からレストランのデータを取得
+		Optional<Restaurant> data = restaurantRepository.findById((long) restaurantId);
+		// 取得したレストランを、これから保存する review オブジェクトに手動でセット（紐付け）
+		review.setRestaurant(data.get());
+
+		review.setCreateAt(new Date()); // 時刻設定
+		reviewRepository.saveAndFlush(review);
+		return new ModelAndView("redirect:/restaurant");
+
+	}
+
 
 }

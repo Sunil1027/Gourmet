@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<title>Add Restaurant Page</title>
+<title>Edit Restaurant Page</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
@@ -29,26 +29,27 @@
 
 		<div class="d-flex align-items-center">
 			<div class="me-3 text-secondary font-weight-bold">
-				ユーザーID: <span>userId（仮）</span>
+				ユーザーID: <span th:text="${#authentication.name}">userId</span>
 			</div>
 
 			<div class="me-3">
 				<a th:href="@{/restaurant}" class="btn btn-outline-secondary btn-sm"
-					style="font-weight: bold;"> &larr; 飲食店一覧 </a>
+					style="font-weight: bold;"> &larr; 飲食店一覧へ </a>
 			</div>
 
-			<div class="me-3">
-				<a th:href="@{/restaurant}"
+			<div class="me-3" sec:authorize="hasRole('ADMIN')">
+				<a th:href="@{/admin/users}"
 					class="btn btn-link btn-sm text-decoration-none"
-					style="font-weight: bold; color: #6c757d;">ユーザー管理(仮)</a>
+					style="font-weight: bold; color: #6c757d;">ユーザー管理</a>
 			</div>
 
 			<div>
-				<a th:href="@{/restaurant}" class="btn btn-danger btn-sm">ログアウト（仮）</a>
+				<a th:href="@{/logout}" class="btn btn-danger btn-sm">ログアウト</a>
 			</div>
 		</div>
 
 	</header>
+
 
 
 
@@ -72,10 +73,9 @@
 				<textarea th:case="'memo'" class="form-control"
 					th:name="${fieldName}" th:text="*{__${fieldName}__}"
 					th:errorclass="err"></textarea>
-<!--
+
 				<input th:case="'userId'" type="text" class="form-control"
-					th:name="${fieldName}" th:value="${loginUserId}" readonly /> 
--->					
+					th:name="${fieldName}" th:value="${loginUserId}" readonly /> 			
 					<input
 					th:case="'openTime'" type="time" class="form-control"
 					th:name="${fieldName}" th:value="*{__${fieldName}__}"

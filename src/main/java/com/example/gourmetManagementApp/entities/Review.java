@@ -10,7 +10,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 
@@ -23,12 +23,15 @@ public class Review {
 
 
 
-	//@ManyToOne
-	//private Restaurant restaurant;
+	@ManyToOne
+	private Restaurant restaurant;
+	
+	@Column(name = "user_id",comment = "投稿者")
+	private String userId; //外部キー未設定
 	
 	
-	//@ManyToOne
-	//private User user;
+//	@ManyToOne
+//	private User user;
 
 
 	@Column(name = "create_at", comment = "投稿日時")
@@ -85,6 +88,22 @@ public class Review {
 
 	public void setComment(String comment) {
 		this.comment = comment;
+	}
+
+	public Restaurant getRestaurant() {
+		return restaurant;
+	}
+
+	public void setRestaurant(Restaurant restaurant) {
+		this.restaurant = restaurant;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	

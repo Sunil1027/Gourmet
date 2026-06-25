@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 
@@ -17,9 +18,13 @@ import jakarta.persistence.Column;
 @Service
 public class RestaurantService {
 	
+	public String getLoginUserId() {
+        return SecurityContextHolder.getContext()
+                                     .getAuthentication()
+                                     .getName();
+    }
 	
-
-
+	
 	public ArrayList<String> generateFieldNames() {
 		Field[] allFields = Restaurant.class.getDeclaredFields();
 
@@ -83,19 +88,13 @@ public class RestaurantService {
 			if (result.isPresent()) {
 				results.add(result.get());
 			}
-
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
-
 		}
-
 		if (results.isEmpty()) {// もしidでヒットしなかったらほかの列でキーワード検索
 			results = restaurantRepository.findByParam(param);
 			return results;
 		}
-
 		return results;
-
 	}
-
 }
