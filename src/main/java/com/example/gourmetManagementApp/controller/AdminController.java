@@ -2,29 +2,23 @@ package com.example.gourmetManagementApp.controller;
 
 
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.example.gourmetManagementApp.entities.Restaurant;
 import com.example.gourmetManagementApp.entities.User;
 import com.example.gourmetManagementApp.reposities.RestaurantRepository;
 import com.example.gourmetManagementApp.reposities.ReviewRepository;
 import com.example.gourmetManagementApp.reposities.UserRepository;
 import com.example.gourmetManagementApp.service.RestaurantService;
 
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 
+@Transactional
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
@@ -37,47 +31,6 @@ public class AdminController {
 	
 	@Autowired
 	private RestaurantService restaurantService;
-	
-	
-	@RequestMapping(value = "/restaurant/delete/{id}", method = RequestMethod.GET)
-	public ModelAndView showDeleteRestaurant(@PathVariable int id, HttpServletRequest request, ModelAndView mav) {
-		mav.setViewName("restaurantDelete");
-		mav.addObject("title", "Delete Restaurant.");
-		mav.addObject("msg", "Can I delete this record?");
-		Optional<Restaurant> data = restaurantRepository.findById((long) id);
-		// String loginUserId = restaurantService.getLoginUserId();
-
-		boolean isAdmin = request.isUserInRole("ADMIN");
-
-		// 「管理者でない」場合のみエラーにする
-		if (!isAdmin) {
-			// 🛑 【不一致エラー】削除ボタンを押させず、エラーメッセージだけを画面に表示する
-			mav.setViewName("deleteResaurant");
-			mav.addObject("title", "Delete Error");
-			mav.addObject("msg", "エラー！：管理者以外は飲食店を削除できません。");
-			mav.addObject("formModel", data.get());
-			mav.addObject("fieldNames", restaurantService.generateFieldNames());
-			mav.addObject("fieldJapaneseNames", restaurantService.generateJapaneseFieldNames());
-			return mav;
-		}
-
-		mav.addObject("formModel", data.get());
-		mav.addObject("fieldNames", restaurantService.generateFieldNames());
-		mav.addObject("fieldJapaneseNames", restaurantService.generateJapaneseFieldNames());
-		return mav;
-	}
-
-	@RequestMapping(value = "/restaurant/delete", method = RequestMethod.POST)
-	@Transactional
-	public ModelAndView deleteRestaurant(@RequestParam long id,
-			@RequestHeader(value = "referer", required = false) String referer, ModelAndView mav) {
-
-		reviewRepository.deleteByRestaurantId(id); // レストラン削除前にレビュー削除
-		restaurantRepository.deleteById(id);
-		System.out.println(referer);
-		return new ModelAndView("redirect:/restaurant");
-	}
-
 	
 
 	@Autowired
@@ -181,76 +134,76 @@ public class AdminController {
 		return "redirect:/admin/users";
 
 	}
+	
+	@GetMapping("/users/back-to-admin")
+	public String backToAdmin(jakarta.servlet.http.HttpSession session) {
+	    // 🚪 なりすまし用のセッションデータを削除
+	    session.removeAttribute("isSwitchUser");
+	    session.removeAttribute("adminName");
+	    System.out.println("セッション削除");
+	    
+	    //再認証不要
 
-
-
-	/**
-	 * 飲食店一覧(管理者)検索を表示 GET /admin/a_restaurants/search
-	 */
-	@GetMapping("/a_restaurants/search")
-	public ModelAndView searchRestaurants(@RequestParam("keyword") String keyword, ModelAndView mav) {
-		if (keyword != null && !keyword.trim().isEmpty()) {
-			mav.addObject("data", restaurantRepository.findByParam(keyword));
-			mav.addObject("keywordValue", keyword);
-		} else {
-			mav.addObject("data", restaurantRepository.findAll());
-		}
-		mav.setViewName("a_restaurants");
-		return mav;
+	    // セッション削除が完了したら、本来のユーザー一覧画面へリダイレクト
+	    return "redirect:/admin/users";
 	}
 
+
+//
+//	/**
+//	 * 飲食店一覧(管理者)検索を表示 GET /admin/a_restaurants/search
+//	 */
+//	@GetMapping("/restaurants/search")
+//	public ModelAndView searchRestaurants(@RequestParam("keyword") String keyword, ModelAndView mav) {
+//		if (keyword != null && !keyword.trim().isEmpty()) {
+//			mav.addObject("data", restaurantRepository.findByParam(keyword));
+//			mav.addObject("keywordValue", keyword);
+//		} else {
+//			mav.addObject("data", restaurantRepository.findAll());
+//		}
+//		mav.setViewName("restaurant");
+//		return mav;
+//	}
+
 	/**
-	 * 飲食店削除確認画面を表示 GET /admin/a_restaurants/delete/{id}
+	 * 飲食店削除確認画面を表示 GET /admin/restaurant/delete/{id}
 	 */
-	@GetMapping("/a_restaurants/delete/{id}")
+	@GetMapping("/restaurant/delete/{id}")
 	public ModelAndView showRestaurantDeleteForm(@PathVariable("id") Long id, ModelAndView mav) {
 		
-		restaurantRepository.findById(id).ifPresent(restaurant -> mav.addObject("targetRestaurant", restaurant));
-		mav.setViewName("a_restaurant_delete"); 
+	mav.setViewName("restaurantDelete"); 
+		mav.addObject("title", "Delete Restaurant.");
+		mav.addObject("msg", "このレコードを本当に削除しますか？");
+		
+		restaurantRepository.findById(id).ifPresent(restaurant -> {
+			mav.addObject("formModel", restaurant);
+			mav.addObject("targetRestaurant", restaurant); 
+		});
+				mav.addObject("fieldNames", restaurantService.generateFieldNames());
+		mav.addObject("fieldJapaneseNames", restaurantService.generateJapaneseFieldNames());
+		
 		return mav;
 	}
 
 	/**
 	 * 飲食店削除処理を実際に実行 POST /admin/restaurants/delete/{id}
 	 */
+	@jakarta.transaction.Transactional
 	@PostMapping("/restaurant/delete/{id}")
 	public String deleteRestaurant(@PathVariable("id") Long id) {
+
+		//店のレビューをリストとして持ってくる
+		java.util.List<com.example.gourmetManagementApp.entities.
+		Review> reviews = reviewRepository.findByRestaurantId(id);
+		
+		//レビューが1件でもあるか確認
+		if (reviews != null && !reviews.isEmpty()) {
+			reviewRepository.deleteAll(reviews); 
+		}
+		
+		//レビューが入ったリストを削除
 		restaurantRepository.deleteById(id);
-		return "redirect:/admin/restaurant"; 
+		return "redirect:/restaurant"; 
 	}
 
-//	/**
-//	 * ユーザー確認ログアウト 
-//	 * GET /admin/users/back-to-admin}
-//	 */
-//	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
-//	@GetMapping("/back-to-admin")
-//	public String backToAdmin(jakarta.servlet.http.HttpSession session) {
-//		
-//		//adminと管理者の印の取り出し
-//		String adminName = (String) session.getAttribute("adminName");
-//		Boolean isSwitchUser = (Boolean) session.getAttribute("isSwitchUser");
-//
-//		//確認モードか、管理者がいるかの確認
-//		if (Boolean.TRUE.equals(isSwitchUser) && adminName != null) {
-//			
-//			//一般ユーザー管理者に切り替える処理
-//			org.springframework.security.core.Authentication auth = 
-//					new org.springframework.security.authentication.
-//					UsernamePasswordAuthenticationToken(
-//					adminName, null,					
-//					org.springframework.security.core.authority.AuthorityUtils.createAuthorityList("ROLE_ADMIN"));
-//			
-//			//管理者に上書き
-//			org.springframework.security.core.context.SecurityContextHolder.getContext().setAuthentication(auth);
-//
-//			//管理者の印と確認で使うadminをクリア
-//			session.removeAttribute("isSwitchUser");
-//			session.removeAttribute("adminName");
-//
-//			return "redirect:/admin/users";
-//		}
-//
-//		return "redirect:/";
-//	}
 }

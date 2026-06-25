@@ -182,7 +182,7 @@ public class RestaurantController {
 		mav.addObject("reviewFieldJapaneseNames", reviewJpFields);
 
 		// 💡 リポジトリからこのお店のレビュー一覧を取得して渡す
-		mav.addObject("reviews", reviewRepository.findByRestaurantId(id));
+		mav.addObject("reviews", reviewRepository.findByRestaurantId((long)id));
 
 		return mav;
 	}
