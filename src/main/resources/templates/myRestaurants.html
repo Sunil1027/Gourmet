@@ -34,16 +34,21 @@ body {
 	right: 20px;
 }
 
+/* 右上ボタン */
 .back-btn {
-	width: 130px;
-	height: 40px;
-	border: none;
-	border-radius: 5px;
-	background-color: #6c757d;
-	color: white;
-	font-weight: bold;
-	cursor: pointer;
-	transition: 0.3s;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+
+    width: 160px;
+    height: 40px;
+    border: none;
+    border-radius: 5px;
+    background-color: #6c757d;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
 }
 
 .back-btn:hover {
@@ -100,6 +105,16 @@ td {
 .detail-btn:hover {
 	background: #e7d27d;
 }
+.user-id {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 16px;
+      color: #ffffff;       
+    background: #3498db;
+    padding: 8px 12px;
+    border-radius: 6px;
+}
 </style>
 
 </head>
@@ -110,7 +125,8 @@ td {
 		<div class="top-area">
 
 			<div class="user-id">
-				<span th:text="${userId}"></span>
+			ユーザーID：
+				<span th:text="${loginUserId}"></span>
 			</div>
 
 			<form action="/users" method="get">

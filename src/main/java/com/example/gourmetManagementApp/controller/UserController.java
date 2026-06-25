@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.gourmetManagementApp.entities.Restaurant;
@@ -26,15 +27,19 @@ public class UserController {
 	@Autowired
 	private RestaurantRepository restaurantRepository;
 	// マイページ表示
-
 	@RequestMapping(value = "/users", method = RequestMethod.GET)
-	public ModelAndView showMyPage(ModelAndView mav) {
+	public ModelAndView usersPage(HttpSession session, ModelAndView mav) {
 
-		mav.setViewName("user-home");
-		mav.addObject("title", "マイページ");
+	    mav.setViewName("user-home");
+	    mav.addObject("title", "マイページ");
 
-		return mav;
+	    String userId = (String) session.getAttribute("loginUserId");
+
+	    mav.addObject("loginUserId", userId);
+
+	    return mav;
 	}
+	
 	// 投稿飲食店一覧表示
 
 	@RequestMapping(value = "/users/restaurants", method = RequestMethod.GET)
@@ -43,9 +48,7 @@ public class UserController {
 		mav.setViewName("myRestaurants");
 		mav.addObject("title", "投稿飲食店一覧");
 		String userId = (String) session.getAttribute("loginUserId");
-
-		System.out.println("userId = " + userId);
-
+		mav.addObject("loginUserId", userId);
 		List<Restaurant> restaurantList =
 		        restaurantRepository.findByUserId(userId);		mav.addObject("restaurantList",restaurantList);
 		return mav;
@@ -77,16 +80,18 @@ public class UserController {
 	// 投稿レビュー一覧
 
 	@RequestMapping(value = "users/reviews", method = RequestMethod.GET)
-	public ModelAndView showMyReviews(ModelAndView mav) {
+	public ModelAndView showMyReviews(ModelAndView mav,
+	        @SessionAttribute("loginUserId") String userId) {
 
-		mav.setViewName("myReviews");
-		mav.addObject("title", "投稿レビュー一覧");
+	    mav.setViewName("myReviews");
+	    mav.addObject("title", "投稿レビュー一覧");
 
-		Iterable<Review> list = reviewRepository.findAll();
+	    Iterable<Review> list = reviewRepository.findAll();
 
-		mav.addObject("review", list);
+	    mav.addObject("reviews", list);
+	    mav.addObject("loginUserId", userId);
 
-		return mav;
+	    return mav;
 	}
 
 	@RequestMapping(value = "users/reviews/edit/{id}", method = RequestMethod.GET)

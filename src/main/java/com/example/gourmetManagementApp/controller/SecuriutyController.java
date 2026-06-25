@@ -117,8 +117,16 @@ public class SecuriutyController {
 	}
 
 	@GetMapping("/user-home")
-	public String showUserHome() {
-		return "user-home";
+	public ModelAndView showUserHome(HttpSession session) {
+
+	    ModelAndView mav = new ModelAndView();
+	    mav.setViewName("user-home");
+
+	    String userId = (String) session.getAttribute("loginUserId");
+
+	    mav.addObject("loginUserId", userId);
+
+	    return mav;
 	}
 
 //	//ユーザー管理(admin)へ遷移
