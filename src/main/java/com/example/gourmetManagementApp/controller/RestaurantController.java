@@ -264,47 +264,5 @@ public class RestaurantController {
 
 	}
 
-//
-//	@Transactional
-//	@RequestMapping(value = "/{restaurantId}/review/register", method = RequestMethod.POST)
-//	public ModelAndView registerReview(@ModelAttribute("reviewForm") Review review, BindingResult result,
-//			@PathVariable Long restaurantId, ModelAndView mav) {
-//
-//		ModelAndView res = null;
-//		System.out.println(result.getFieldErrors());
-//		if (!result.hasErrors()) {
-//			System.out.println("Register");
-//
-//			// URLの {retaurantId} からレストランのデータを取得
-//			Optional<Restaurant> data = restaurantRepository.findById((long) restaurantId);
-//			// 取得したレストランを、これから保存する review オブジェクトに手動でセット（紐付け）
-//			review.setRestaurant(data.get());
-//
-//			review.setCreateAt(new Date()); // 時刻設定
-//			reviewRepository.saveAndFlush(review);
-//			res = new ModelAndView("redirect:/restaurant");
-//		} else {// バリデーション結果表示
-//			mav.setViewName("reviewAdd");
-//			mav.addObject("title", "Review Register Page (error)");
-//			mav.addObject("msg", "sorry, error is occurred...");
-//
-//			mav.addObject("reviewForm", review);
-//
-//			List<String> fieldNames = Arrays.asList("userId","title", "rating", "comment");
-//			mav.addObject("fieldNames", fieldNames);
-//
-//			List<String> fieldJapaneseNames = Arrays.asList("投稿者","タイトル", "評価（1〜5）", "レビュー内容");
-//
-//			mav.addObject("fieldJapaneseNames", fieldJapaneseNames);
-//			
-//			
-//			res = mav;
-//		}
-//		return res;
-//
-//	}
-//	
-
-	
 
 }

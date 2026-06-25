@@ -128,17 +128,16 @@ h3 {
 
 </head>
 <body>
-
 	<div class="container">
 
 		<h3>メイン画面</h3>
 
 		<div class="logout">
-			<button onclick="location.href='/'">ログアウト</button>
+			<button onclick="location.href='/logout'">ログアウト</button>
 		</div>
 
 		<h4 class="text-center mb-4">
-			ようこそ、 <span th:text="${userId}"></span> さん
+			ようこそ、 <span th:text="${loginUserId}"></span> さん
 		</h4>
 
 		<div class="menu">
