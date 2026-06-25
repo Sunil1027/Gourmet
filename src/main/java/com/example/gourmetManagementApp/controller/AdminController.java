@@ -6,13 +6,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.gourmetManagementApp.entities.User;
+import com.example.gourmetManagementApp.reposities.RestaurantRepository;
 import com.example.gourmetManagementApp.reposities.UserRepository;
 
 @Controller
-@RequestMapping("/admin") // 設計書の「/admin」プレフィックスを共通化
+@RequestMapping("/admin")
 public class AdminController {
 
 	@Autowired
@@ -95,25 +97,6 @@ public class AdminController {
 	}
 
 	/**
-	 * 飲食店削除画面を表示 GET /admin/restaurants/delete/{id}
-	 */
-	@GetMapping("/restaurants/delete/{id}")
-	public ModelAndView showRestaurantDelete(@PathVariable("id") Long id, ModelAndView mav) {
-		// TODO: 飲食店取得
-		mav.setViewName("restaurantDelete");
-		return mav;
-	}
-
-	/**
-	 * 飲食店削除を実行 POST /admin/restaurants/delete
-	 */
-	@PostMapping("/restaurants/delete")
-	public String deleteRestaurant() {
-		// TODO: 飲食店削除
-		return "redirect:/restaurants";
-	}
-
-	/**
 	 * ユーザー確認ログイン GET /admin/users/login-as/{id}
 	 */
 	@GetMapping("/users/login-as/{id}")
@@ -137,39 +120,89 @@ public class AdminController {
 		}
 
 		return "redirect:/admin/users";
+
+	}
+
+	@Autowired
+	private RestaurantRepository restaurantRepository;
+
+	/**
+	 * 飲食店一覧(管理者)画面を表示 GET /admin/a_restaurants
+	 */
+	@GetMapping("/a_restaurants")
+	public ModelAndView showRestaurants(ModelAndView mav) {
+		mav.addObject("data", restaurantRepository.findAll());
+		mav.setViewName("a_restaurants");
+		return mav;
 	}
 
 	/**
-	 * ユーザー確認ログアウト 
-	 * GET /admin/users/back-to-admin}
+	 * 飲食店一覧(管理者)検索を表示 GET /admin/a_restaurants/search
 	 */
-	@GetMapping("/back-to-admin")
-	public String backToAdmin(jakarta.servlet.http.HttpSession session) {
-		
-		//adminと管理者の印の取り出し
-		String adminName = (String) session.getAttribute("adminName");
-		Boolean isSwitchUser = (Boolean) session.getAttribute("isSwitchUser");
-
-		//確認モードか、管理者がいるかの確認
-		if (Boolean.TRUE.equals(isSwitchUser) && adminName != null) {
-			
-			//一般ユーザー管理者に切り替える処理
-			org.springframework.security.core.Authentication auth = 
-					new org.springframework.security.authentication.
-					UsernamePasswordAuthenticationToken(
-					adminName, null,					
-					org.springframework.security.core.authority.AuthorityUtils.createAuthorityList("ROLE_ADMIN"));
-			
-			//管理者に上書き
-			org.springframework.security.core.context.SecurityContextHolder.getContext().setAuthentication(auth);
-
-			//管理者の印と確認で使うadminをクリア
-			session.removeAttribute("isSwitchUser");
-			session.removeAttribute("adminName");
-
-			return "redirect:/admin/users";
+	@GetMapping("/a_restaurants/search")
+	public ModelAndView searchRestaurants(@RequestParam("keyword") String keyword, ModelAndView mav) {
+		if (keyword != null && !keyword.trim().isEmpty()) {
+			mav.addObject("data", restaurantRepository.findByParam(keyword));
+			mav.addObject("keywordValue", keyword);
+		} else {
+			mav.addObject("data", restaurantRepository.findAll());
 		}
-
-		return "redirect:/";
+		mav.setViewName("a_restaurants");
+		return mav;
 	}
+
+	/**
+	 * 飲食店削除確認画面を表示 GET /admin/a_restaurants/delete/{id}
+	 */
+	@GetMapping("/a_restaurants/delete/{id}")
+	public ModelAndView showRestaurantDeleteForm(@PathVariable("id") Long id, ModelAndView mav) {
+		
+		restaurantRepository.findById(id).ifPresent(restaurant -> mav.addObject("targetRestaurant", restaurant));
+		mav.setViewName("a_restaurant_delete"); 
+		return mav;
+	}
+
+	/**
+	 * 飲食店削除処理を実際に実行 POST /admin/restaurants/delete/{id}
+	 */
+	@PostMapping("/restaurant/delete/{id}")
+	public String deleteRestaurant(@PathVariable("id") Long id) {
+		restaurantRepository.deleteById(id);
+		return "redirect:/admin/restaurant"; 
+	}
+
+//	/**
+//	 * ユーザー確認ログアウト 
+//	 * GET /admin/users/back-to-admin}
+//	 */
+//	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_USER')")
+//	@GetMapping("/back-to-admin")
+//	public String backToAdmin(jakarta.servlet.http.HttpSession session) {
+//		
+//		//adminと管理者の印の取り出し
+//		String adminName = (String) session.getAttribute("adminName");
+//		Boolean isSwitchUser = (Boolean) session.getAttribute("isSwitchUser");
+//
+//		//確認モードか、管理者がいるかの確認
+//		if (Boolean.TRUE.equals(isSwitchUser) && adminName != null) {
+//			
+//			//一般ユーザー管理者に切り替える処理
+//			org.springframework.security.core.Authentication auth = 
+//					new org.springframework.security.authentication.
+//					UsernamePasswordAuthenticationToken(
+//					adminName, null,					
+//					org.springframework.security.core.authority.AuthorityUtils.createAuthorityList("ROLE_ADMIN"));
+//			
+//			//管理者に上書き
+//			org.springframework.security.core.context.SecurityContextHolder.getContext().setAuthentication(auth);
+//
+//			//管理者の印と確認で使うadminをクリア
+//			session.removeAttribute("isSwitchUser");
+//			session.removeAttribute("adminName");
+//
+//			return "redirect:/admin/users";
+//		}
+//
+//		return "redirect:/";
+//	}
 }
