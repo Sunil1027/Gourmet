@@ -1,5 +1,6 @@
 package com.example.gourmetManagementApp.controller;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -122,9 +123,12 @@ public class RestaurantController {
 	}
 
 	@RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
-	public ModelAndView editRestaurant(@ModelAttribute("formModel") Restaurant restaurant, @PathVariable int id,
-			ModelAndView mav) {
+	public ModelAndView editRestaurant(@ModelAttribute("formModel") Restaurant restaurant,
+			@RequestHeader(name = "referer", required = false) String referer, @PathVariable int id, ModelAndView mav) {
 		mav.setViewName("restaurantEdit");
+		System.out.println(referer);
+		mav.addObject("cancelUrl", referer);
+
 		mav.addObject("title", "edit Restaurant.");
 		Optional<Restaurant> data = restaurantRepository.findById((long) id);
 		mav.addObject("formModel", data.get());
@@ -146,7 +150,7 @@ public class RestaurantController {
 			restaurantRepository.saveAndFlush(restaurant);
 			res = new ModelAndView("redirect:/restaurant");
 		} else {// バリデーション結果表示
-			mav.setViewName("edit");
+			mav.setViewName("restaurantEdit");
 			mav.addObject("title", "Restaurant Edit Page (error)");
 			mav.addObject("msg", "sorry, error is occurred...");
 
@@ -184,7 +188,8 @@ public class RestaurantController {
 	}
 
 	@RequestMapping(value = "/{id}/review/add", method = RequestMethod.GET)
-	public ModelAndView showReviewAdd(@PathVariable Long id,@RequestHeader(name = "referer", required = false) String referer, ModelAndView mav) {
+	public ModelAndView showReviewAdd(@PathVariable Long id,
+			@RequestHeader(name = "referer", required = false) String referer, ModelAndView mav) {
 
 		mav.setViewName("reviewAdd");
 		System.out.println(referer);
@@ -258,11 +263,12 @@ public class RestaurantController {
 		// 取得したレストランを、これから保存する review オブジェクトに手動でセット（紐付け）
 		review.setRestaurant(data.get());
 
-		review.setCreateAt(new Date()); // 時刻設定
+		//review.setCreateAt(new Date()); // 時刻設定
+		
+		review.setCreateAt(LocalDateTime.now());
 		reviewRepository.saveAndFlush(review);
 		return new ModelAndView("redirect:/restaurant");
 
 	}
-
 
 }

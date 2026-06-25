@@ -46,12 +46,11 @@ public class Restaurant {
 
 	private LocalTime closeTime;
 
-	@Column(name = "adress", comment = "住所", nullable = false)
-
+	@Column(name = "address", comment = "住所", nullable = false)
 	@NotBlank(message = "住所は入力必須です")
-	private String storingPlace;
+	private String address;
 
-	@Column(name = "memo", comment = "コメント")
+	@Column(name = "memo", comment = "メモ")
 	private String memo;
 
 	public Long getId() {
@@ -102,13 +101,6 @@ public class Restaurant {
 		this.closeTime = closeTime;
 	}
 
-	public String getStoringPlace() {
-		return storingPlace;
-	}
-
-	public void setStoringPlace(String storingPlace) {
-		this.storingPlace = storingPlace;
-	}
 
 	public String getMemo() {
 		return memo;
@@ -116,6 +108,14 @@ public class Restaurant {
 
 	public void setMemo(String memo) {
 		this.memo = memo;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	// ★ 1:N の関連付け（mappedByを指定）
