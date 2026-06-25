@@ -102,40 +102,41 @@ textarea {
 
 		<form th:action="@{/users/reviews/update}" method="post">
 
+			<!-- IDだけ送信 -->
 			<input type="hidden" name="id" th:value="${review.id}">
 
 			<table>
 
 				<tr>
 					<td class="label">店舗名：</td>
-					<td class="input"><span th:text="${review.shopName}"></span></td>
+					<td class="input"><span
+						th:text="${review.restaurant.restaurantName}"></span></td>
 				</tr>
 
 				<tr>
-					<td class="label">ユーザー名：</td>
+					<td class="label">ユーザーID：</td>
 					<td class="input"><span th:text="${review.userId}"></span></td>
 				</tr>
 
 				<tr>
 					<td class="label">評価：</td>
 					<td class="input"><select name="rating">
-							<option value="1">★</option>
-							<option value="2">★★</option>
-							<option value="3">★★★</option>
-							<option value="4">★★★★</option>
-							<option value="5">★★★★★</option>
+							<option value="5" th:selected="${review.rating == 5}">5（大満足）</option>
+							<option value="4" th:selected="${review.rating == 4}">4（満足）</option>
+							<option value="3" th:selected="${review.rating == 3}">3（普通）</option>
+							<option value="2" th:selected="${review.rating == 2}">2（微妙）</option>
+							<option value="1" th:selected="${review.rating == 1}">1（残念）</option>
 					</select></td>
 				</tr>
 
 				<tr>
 					<td class="label">投稿日：</td>
-					<td class="input"><span th:text="${review.createdAt}"></span>
-					</td>
+					<td class="input"><span th:text="${review.createAt}"></span></td>
 				</tr>
 
 				<tr>
 					<td class="label">コメント：</td>
-					<td class="input"><textarea name="comment"
+					<td class="input"><textarea name="comment" rows="5"
 							th:text="${review.comment}"></textarea></td>
 				</tr>
 

@@ -112,7 +112,7 @@ h2 {
 			<input type="hidden" name="id" th:value="${review.id}">
 
 			<div class="info">
-				<strong>店舗名：</strong> <span th:text="${review.restaurantName}"></span>
+				<strong>店舗名：</strong> <span th:text="${review.restaurant.restaurantName}"></span>
 			</div>
 
 			<div class="info">
@@ -124,7 +124,7 @@ h2 {
 			</div>
 
 			<div class="info">
-				<strong>投稿日：</strong> <span th:text="${review.createdAt}"></span>
+				<strong>投稿日：</strong> <span th:text="${review.createAt}"></span>
 			</div>
 
 			<div class="info">

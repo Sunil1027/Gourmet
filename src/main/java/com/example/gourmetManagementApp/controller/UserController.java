@@ -78,17 +78,17 @@ public class UserController {
 	    return mav;
 	}
 	// 投稿レビュー一覧
-
 	@RequestMapping(value = "users/reviews", method = RequestMethod.GET)
-	public ModelAndView showMyReviews(ModelAndView mav,
+	public ModelAndView showMyReviews(
+	        ModelAndView mav,
 	        @SessionAttribute("loginUserId") String userId) {
 
 	    mav.setViewName("myReviews");
 	    mav.addObject("title", "投稿レビュー一覧");
 
-	    Iterable<Review> list = reviewRepository.findAll();
+	    List<Review> reviews = reviewRepository.findByUserId(userId);
 
-	    mav.addObject("reviews", list);
+	    mav.addObject("reviews", reviews);
 	    mav.addObject("loginUserId", userId);
 
 	    return mav;
@@ -112,27 +112,33 @@ public class UserController {
 	@RequestMapping(value = "users/reviews/update", method = RequestMethod.POST)
 	public ModelAndView updateMyReview(Review review, ModelAndView mav) {
 
-		reviewRepository.save(review);
+	    Review oldReview = reviewRepository.findById(review.getId()).orElse(null);
 
-		mav.setViewName("redirect:/users/reviews");
+	    if (oldReview != null) {
+	        oldReview.setRating(review.getRating());
+	        oldReview.setComment(review.getComment());
 
-		return mav;
+	        reviewRepository.save(oldReview);
+	    }
+
+	    mav.setViewName("redirect:/users/reviews");
+	    return mav;
 	}
 
 	/**
 	 * レビュー削除確認画面
 	 */
-	@RequestMapping(value = "users/reviews/delete/{id}", method = RequestMethod.GET)
-	public ModelAndView showReviewDelete(@PathVariable int id, ModelAndView mav) {
+	@RequestMapping(value = "/users/reviews/delete/{id}", method = RequestMethod.GET)
+	public ModelAndView showDeleteReview(
+	        @PathVariable Long id,
+	        ModelAndView mav) {
 
-		mav.setViewName("myReviewDelete");
-		mav.addObject("title", "レビュー削除");
+	    Review review = reviewRepository.findById(id).orElse(null);
 
-		Optional<Review> data = reviewRepository.findById(id);
+	    mav.setViewName("myReviewDelete");
+	    mav.addObject("review", review);
 
-		mav.addObject("review", data.get());
-
-		return mav;
+	    return mav;
 	}
 
 	/**
