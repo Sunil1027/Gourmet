@@ -172,12 +172,8 @@ public class AdminController {
 			session.setAttribute("isSwitchUser", true);// 管理者の印
 			session.setAttribute("adminName", "admin");
 
-			// 一般ユーザーになる処理
-			org.springframework.security.core.Authentication auth = new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
-					targetUser.getUserId(), null,
-					org.springframework.security.core.authority.AuthorityUtils.createAuthorityList("ROLE_USER")// 一般ユーザー変更
-			);
-			org.springframework.security.core.context.SecurityContextHolder.getContext().setAuthentication(auth);
+			// 一般ユーザを設定
+			session.setAttribute("loginUserId",targetUser.getUserId());
 
 			return "redirect:/user-home";
 		}
@@ -187,15 +183,6 @@ public class AdminController {
 	}
 
 
-	/**
-	 * 飲食店一覧(管理者)画面を表示 GET /admin/a_restaurants
-	 */
-	@GetMapping("/a_restaurants")
-	public ModelAndView showRestaurants(ModelAndView mav) {
-		mav.addObject("data", restaurantRepository.findAll());
-		mav.setViewName("a_restaurants");
-		return mav;
-	}
 
 	/**
 	 * 飲食店一覧(管理者)検索を表示 GET /admin/a_restaurants/search
