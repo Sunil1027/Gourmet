@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>レビュー編集</title>
+
+<style>
+body {
+	font-family: "Yu Gothic", sans-serif;
+	background-color: #f4f6f9;
+	margin: 0;
+}
+
+.container {
+	width: 700px;
+	margin: 50px auto;
+	background: #fff;
+	padding: 40px;
+	border: 1px solid #ccc;
+}
+
+.title {
+	display: inline-block;
+	background-color: #1f3a5f;
+	color: white;
+	font-size: 24px;
+	font-weight: bold;
+	padding: 15px 20px;
+	border-radius: 5px;
+	margin-bottom: 25px;
+}
+
+table {
+	margin: 0 auto;
+	border-collapse: collapse;
+}
+
+td {
+	border: 1px solid #000;
+	padding: 10px;
+}
+
+.label {
+	width: 150px;
+	font-weight: bold;
+}
+
+.input {
+	width: 250px;
+}
+
+input[type="text"], textarea, select {
+	width: 100%;
+	padding: 5px;
+	box-sizing: border-box;
+}
+
+textarea {
+	height: 100px;
+	resize: none;
+}
+
+.button-area {
+	margin-top: 50px;
+	text-align: center;
+}
+
+.update-btn {
+	width: 120px;
+	height: 40px;
+	border: none;
+	background: #007bff;
+	color: white;
+	font-weight: bold;
+	cursor: pointer;
+	margin-right: 30px;
+}
+
+.update-btn:hover {
+	background: #0056b3;
+}
+
+.cancel-btn {
+	width: 120px;
+	height: 40px;
+	border: none;
+	background: #f8e8a6;
+	cursor: pointer;
+}
+
+.cancel-btn:hover {
+	background: #e9d889;
+}
+</style>
+
+</head>
+<body>
+
+	<div class="container">
+
+		<div class="title">レビュー編集</div>
+
+		<form th:action="@{/admin/allReview/update}" method="post">
+
+			<!-- IDだけ送信 -->
+			<input type="hidden" name="id" th:value="${review.id}">
+
+			<table>
+
+				<tr>
+					<td class="label">店舗名：</td>
+					<td class="input"><span
+						th:text="${review.restaurant.restaurantName}"></span></td>
+				</tr>
+
+				<tr>
+					<td class="label">ユーザーID：</td>
+					<td class="input"><span th:text="${review.userId}"></span></td>
+				</tr>
+
+				<tr>
+					<td class="label">評価：</td>
+					<td class="input"><select name="rating">
+							<option value="5" th:selected="${review.rating == 5}">5（大満足）</option>
+							<option value="4" th:selected="${review.rating == 4}">4（満足）</option>
+							<option value="3" th:selected="${review.rating == 3}">3（普通）</option>
+							<option value="2" th:selected="${review.rating == 2}">2（微妙）</option>
+							<option value="1" th:selected="${review.rating == 1}">1（残念）</option>
+					</select></td>
+				</tr>
+
+				<tr>
+					<td class="label">投稿日：</td>
+					<td class="input"><span th:text="${review.createAt}"></span></td>
+				</tr>
+
+				<tr>
+					<td class="label">コメント：</td>
+					<td class="input"><textarea name="comment" rows="5"
+							th:text="${review.comment}"></textarea></td>
+				</tr>
+
+			</table>
+
+			<div class="button-area">
+				<button type="submit" class="update-btn">更新</button>
+
+				<button type="button" class="cancel-btn" onclick="history.back()">
+					キャンセル</button>
+			</div>
+
+		</form>
+
+	</div>
+
+</body>
+</html>
