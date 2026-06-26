@@ -42,7 +42,7 @@ public class RestaurantController {
 	private RestaurantService restaurantService;
 
 	@RequestMapping("")
-	public ModelAndView showRestaurant(@ModelAttribute("formModel") Restaurant food, ModelAndView mav) {
+	public ModelAndView showRestaurant(@ModelAttribute("formModel") Restaurant restaurant, ModelAndView mav) {
 		// String userId=restaurantService.getLoginUserId();
 
 		mav.setViewName("restaurants");
@@ -50,7 +50,7 @@ public class RestaurantController {
 		// mav.addObject("msg", "This is restaurant page.");
 		List<Restaurant> list = restaurantRepository.findAll();
 
-		mav.addObject("formModel", food);
+		mav.addObject("formModel", restaurant);
 		mav.addObject("data", list);
 
 		ArrayList<String> fieldJapaneseNames = restaurantService.generateJapaneseFieldNames();
