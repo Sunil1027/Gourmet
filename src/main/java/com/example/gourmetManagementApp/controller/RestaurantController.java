@@ -3,7 +3,6 @@ package com.example.gourmetManagementApp.controller;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.gourmetManagementApp.entities.Restaurant;
@@ -46,7 +44,7 @@ public class RestaurantController {
 		// String userId=restaurantService.getLoginUserId();
 
 		mav.setViewName("restaurants");
-		mav.addObject("title", "Restaurant Page");
+		mav.addObject("title", "飲食店一覧");
 		// mav.addObject("msg", "This is restaurant page.");
 		List<Restaurant> list = restaurantRepository.findAll();
 
@@ -91,8 +89,8 @@ public class RestaurantController {
 
 		mav.setViewName("restaurantAdd");
 
-		mav.addObject("title", "Add Page ");
-		mav.addObject("msg", "Restaurant Add Page ");
+		mav.addObject("title", "飲食店追加");
+		mav.addObject("msg", "飲食店情報を記入して下さい。");
 		mav.addObject("formModel", restaurant);
 		mav.addObject("loginUserId", restaurantService.getLoginUserId());
 
@@ -113,7 +111,7 @@ public class RestaurantController {
 			res = new ModelAndView("redirect:/restaurant");
 		} else {// バリデーション結果表示
 			mav.setViewName("restaurantAdd");
-			mav.addObject("title", "Add Page (error)");
+			mav.addObject("title", "飲食店追加(error)");
 			mav.addObject("msg", "sorry, error is occurred...");
 			mav.addObject("fieldJapaneseNames", restaurantService.generateJapaneseFieldNames());
 			mav.addObject("fieldNames", restaurantService.generateFieldNames());
@@ -129,7 +127,7 @@ public class RestaurantController {
 		System.out.println(referer);
 		mav.addObject("cancelUrl", referer);
 
-		mav.addObject("title", "edit Restaurant.");
+		mav.addObject("title", "飲食店情報変更");
 		Optional<Restaurant> data = restaurantRepository.findById((long) id);
 		mav.addObject("formModel", data.get());
 		mav.addObject("loginUserId", restaurantService.getLoginUserId());

@@ -200,14 +200,11 @@ public class AdminController {
 	
 	@GetMapping("/users/back-to-admin")
 	public String backToAdmin(jakarta.servlet.http.HttpSession session) {
-	    // 🚪 なりすまし用のセッションデータを削除
+	
 	    session.removeAttribute("isSwitchUser");
 	    session.removeAttribute("adminName");
 	    System.out.println("セッション削除");
-	    
-	    //再認証不要
 
-	    // セッション削除が完了したら、本来のユーザー一覧画面へリダイレクト
 	    return "redirect:/admin/users";
 	}
 
