@@ -2,6 +2,7 @@ package com.example.gourmetManagementApp.controller;
 
 
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.gourmetManagementApp.entities.Review;
@@ -233,13 +235,12 @@ public class AdminController {
 	/**
 	 * 飲食店削除処理を実際に実行 POST /admin/restaurants/delete/{id}
 	 */
-	@jakarta.transaction.Transactional
-	@PostMapping("/restaurant/delete/{id}")
-	public String deleteRestaurant(@PathVariable("id") Long id) {
+	@Transactional
+	@PostMapping("/restaurant/delete")
+	public String deleteRestaurant(@RequestParam("id") Long id) {
 
 		//店のレビューをリストとして持ってくる
-		java.util.List<com.example.gourmetManagementApp.entities.
-		Review> reviews = reviewRepository.findByRestaurantId(id);
+		List<Review> reviews = reviewRepository.findByRestaurantId(id);
 		
 		//レビューが1件でもあるか確認
 		if (reviews != null && !reviews.isEmpty()) {
