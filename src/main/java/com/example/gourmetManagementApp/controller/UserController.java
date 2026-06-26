@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -152,5 +153,18 @@ public class UserController {
 		mav.setViewName("redirect:/users/reviews");
 
 		return mav;
+	}
+	
+	@GetMapping("/user-home")
+	public ModelAndView showUserHome(HttpSession session) {
+
+	    ModelAndView mav = new ModelAndView();
+	    mav.setViewName("user-home");
+
+	    String userId = (String) session.getAttribute("loginUserId");
+
+	    mav.addObject("loginUserId", userId);
+
+	    return mav;
 	}
 }
