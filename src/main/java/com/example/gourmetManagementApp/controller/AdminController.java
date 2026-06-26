@@ -2,14 +2,18 @@ package com.example.gourmetManagementApp.controller;
 
 
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.example.gourmetManagementApp.entities.Review;
 import com.example.gourmetManagementApp.entities.User;
 import com.example.gourmetManagementApp.reposities.RestaurantRepository;
 import com.example.gourmetManagementApp.reposities.ReviewRepository;
@@ -86,32 +90,89 @@ public class AdminController {
 		return "redirect:/admin/users"; // 削除後は一覧にリダイレクト
 	}
 
+	
 	/**
-	 * レビュー編集画面を表示 GET /admin/reviews/edit/{id}
+	 * 全レビュー一覧画面を表示（ユーザー名・店舗名連動） 
+	 * GET /admin//allReviews
 	 */
-	@GetMapping("/reviews/edit/{id}")
-	public ModelAndView showReviewEditForm(@PathVariable("id") Long id, ModelAndView mav) {
-		mav.setViewName("reviewEdit");
+	@GetMapping("/allReviews")
+	public ModelAndView showAllReviewList(ModelAndView mav) {
+		java.util.List<com.example.gourmetManagementApp.entities.Review> allReviews = reviewRepository.findAll();
+		
+		mav.addObject("reviews", allReviews);
+		
+		mav.setViewName("allReviews"); 
 		return mav;
 	}
 
+	
+	
+	
 	/**
-	 * レビュー更新処理を実行 POST /admin/reviews/update
+	 * レビュー編集画面を表示 GET /allReview/edit/{id}
 	 */
-	@PostMapping("/reviews/update")
-	public String updateReview() {
-		return "redirect:/admin/users";
+	@RequestMapping(value = "/allReview/edit/{id}", method = RequestMethod.GET)
+	public ModelAndView showReviewEdit(@PathVariable int id, ModelAndView mav) {
+
+		mav.setViewName("allReviewEdit");
+		mav.addObject("title", "レビュー編集");
+
+		Optional<Review> data = reviewRepository.findById(id);
+
+		mav.addObject("review", data.get());
+
+		return mav;
+	}
+	
+	/**
+	 * レビュー更新処理を実行 POST /admin/allReview/update
+	 */
+	@RequestMapping(value = "/allReview/update", method = RequestMethod.POST)
+		public ModelAndView updateMyReview(Review review, ModelAndView mav) {
+
+		    Review oldReview = reviewRepository.findById(review.getId()).orElse(null);
+
+		    if (oldReview != null) {
+		        oldReview.setRating(review.getRating());
+		        oldReview.setComment(review.getComment());
+
+		        reviewRepository.save(oldReview);
+		    }
+
+		    mav.setViewName("redirect:/admin/allReviews");
+		    return mav;
+		}
+	
+	/**
+	 * レビュー削除確認画面を表示
+	 * GET /admin/allReview/delete/{id}
+	 */
+	@RequestMapping(value = "/allReview/delete/{id}", method = RequestMethod.GET)
+	public ModelAndView showDeleteReview(
+	        @PathVariable Long id,
+	        ModelAndView mav) {
+
+	    Review review = reviewRepository.findById(id).orElse(null);
+
+	    mav.setViewName("allReviewDelete");
+	    mav.addObject("review", review);
+
+	    return mav;
 	}
 
-	/**
-	 * レビュー削除処理を実行 POST /admin/reviews/delete/{id}
-	 */
-	@PostMapping("/reviews/delete/{id}")
-	public String deleteReview(@PathVariable("id") Long id) {
-		// TODO: レビュー削除
-		return "redirect:/admin/users";
-	}
 
+	/**
+	 * レビュー削除処理を実行
+	 * POST /admin/allReview/delete/{id}
+	 */
+	@PostMapping("/allReview/delete/{id}")
+	public String deleteMyReview(@PathVariable Long id) {
+
+	    reviewRepository.deleteById(id);
+
+	    return "redirect:/admin/allReviews";
+	}
+	
 	/**
 	 * ユーザー確認ログイン GET /admin/users/login-as/{id}
 	 */
@@ -148,22 +209,6 @@ public class AdminController {
 	    return "redirect:/admin/users";
 	}
 
-
-//
-//	/**
-//	 * 飲食店一覧(管理者)検索を表示 GET /admin/a_restaurants/search
-//	 */
-//	@GetMapping("/restaurants/search")
-//	public ModelAndView searchRestaurants(@RequestParam("keyword") String keyword, ModelAndView mav) {
-//		if (keyword != null && !keyword.trim().isEmpty()) {
-//			mav.addObject("data", restaurantRepository.findByParam(keyword));
-//			mav.addObject("keywordValue", keyword);
-//		} else {
-//			mav.addObject("data", restaurantRepository.findAll());
-//		}
-//		mav.setViewName("restaurant");
-//		return mav;
-//	}
 
 	/**
 	 * 飲食店削除確認画面を表示 GET /admin/restaurant/delete/{id}
