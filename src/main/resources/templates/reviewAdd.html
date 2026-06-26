@@ -25,10 +25,13 @@
 		</div>
 
 		<div class="d-flex align-items-center">
-			<div class="me-3 text-secondary font-weight-bold">
-				ユーザーID: <span th:text="${#authentication.name}">userId</span>
+			<div class="me-3 font-weight-bold">
+				<a
+					th:href="${#authorization.expression('hasRole(''ADMIN'')')} ? @{/admin/users} : @{/user-home}"
+					class="text-secondary text-decoration-none"> ユーザーID: <span
+					th:text="${#authentication.name}">userId</span>
+				</a>
 			</div>
-
 			<div class="me-3">
 				<a th:href="@{/restaurant}" class="btn btn-outline-secondary btn-sm"
 					style="font-weight: bold;"> &larr; 飲食店一覧へ </a>

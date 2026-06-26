@@ -221,10 +221,10 @@ public class RestaurantController {
 			// URLの {retaurantId} からレストランのデータを取得
 			Optional<Restaurant> data = restaurantRepository.findById((long) restaurantId);
 			// 取得したレストランを、これから保存する review オブジェクトに手動でセット（紐付け）
-			review.setRestaurant(data.get());
+			//review.setRestaurant(data.get());
 
 			mav.addObject("restaurant", data.get());
-			// review.setCreateAt(new Date());
+
 
 			List<String> fieldNames = Arrays.asList("userId", "title", "rating", "comment");
 			mav.addObject("fieldNames", fieldNames);
@@ -237,12 +237,12 @@ public class RestaurantController {
 			mav.setViewName("reviewAdd");
 			mav.addObject("title", "Review Register Page (error)");
 			mav.addObject("msg", "sorry, error is occurred...");
-//			mav.addObject("reviewForm", review);
-//			List<String> fieldNames = Arrays.asList("userId","title", "rating", "comment");
-//			mav.addObject("fieldNames", fieldNames);
-//
-//			List<String> fieldJapaneseNames = Arrays.asList("タイトル", "評価（1〜5）", "レビュー内容");
-//			mav.addObject("fieldJapaneseNames", fieldJapaneseNames);	
+			mav.addObject("reviewForm", review);
+			List<String> fieldNames = Arrays.asList("userId", "title", "rating", "comment");
+			mav.addObject("fieldNames", fieldNames);
+			// 日本語のラベル名リスト（上の英語リストと「順番」を完全に一致）
+			List<String> fieldJapaneseNames = Arrays.asList("投稿者", "タイトル", "評価（1〜5）", "レビュー内容");
+			mav.addObject("fieldJapaneseNames", fieldJapaneseNames);
 			res = mav;
 		}
 		return res;
@@ -265,7 +265,7 @@ public class RestaurantController {
 		
 		review.setCreateAt(LocalDateTime.now());
 		reviewRepository.saveAndFlush(review);
-		return new ModelAndView("redirect:/restaurant");
+		return new ModelAndView("redirect:/restaurant/detail/" + restaurantId);
 
 	}
 

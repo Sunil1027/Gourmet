@@ -26,8 +26,12 @@
 		</div>
 
 		<div class="d-flex align-items-center">
-			<div class="me-3 text-secondary font-weight-bold">
-				ユーザーID: <span th:text="${#authentication.name}">userId</span>
+			<div class="me-3 font-weight-bold">
+				<a
+					th:href="${#authorization.expression('hasRole(''ADMIN'')')} ? @{/admin/users} : @{/user-home}"
+					class="text-secondary text-decoration-none"> ユーザーID: <span
+					th:text="${#authentication.name}">userId</span>
+				</a>
 			</div>
 
 			<div class="me-3">
@@ -74,7 +78,7 @@
 					th:errorclass="err"></textarea>
 
 				<input th:case="'userId'" type="text" class="form-control"
-					th:name="${fieldName}" th:value="${loginUserId}" readonly /> <input
+					th:name="${fieldName}" th:value="*{__${fieldName}__}" readonly /> <input
 					th:case="'openTime'" type="time" class="form-control"
 					th:name="${fieldName}" th:value="*{__${fieldName}__}"
 					th:errorclass="err" /> <input th:case="'closeTime'" type="time"
