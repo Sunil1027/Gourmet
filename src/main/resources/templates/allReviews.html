@@ -196,7 +196,7 @@ tr:hover {
 				
 				<td th:text="${review.userId}"></td>
 
-				<td th:text="${review.createAt}"></td>
+				<td th:text="${#temporals.format(review.createAt, 'yyyy/MM/dd HH:mm')}"></td>
 				
 				<td class="star" th:text="${review.rating}"></td>
 				
