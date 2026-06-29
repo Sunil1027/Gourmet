@@ -131,7 +131,7 @@ textarea {
 
 				<tr>
 					<td class="label">投稿日：</td>
-					<td class="input"><span th:text="${review.createAt}"></span></td>
+					<td class="input"><span th:text="${#temporals.format(review.createAt, 'yyyy/MM/dd HH:mm')}"></span></td>
 				</tr>
 
 				<tr>
